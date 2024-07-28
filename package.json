@@ -12,10 +12,47 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "exampleContainer",
+          "title": "Example",
+          "icon": "resources/icon.png"
+        }
+      ]
+    },
+    "views": {
+      "exampleContainer": [
+        {
+          "id": "exampleView",
+          "name": "Commands and Keybindings"
+        }
+      ]
+    },
     "commands": [
       {
+        "command": "extension.foldLevel1",
+        "title": "Fold Level 1"
+      },
+      {
+        "command": "extension.foldLevel2",
+        "title": "Fold Level 2"
+      },
+      {
+        "command": "extension.foldLevel3",
+        "title": "Fold Level 3"
+      },
+      {
+        "command": "extension.foldLevel4",
+        "title": "Fold Level 4"
+      },
+      {
+        "command": "extension.foldLevel5",
+        "title": "Fold Level 5"
+      },
+      {
         "command": "extension.collapseAllFunctions",
-        "title": "Collapse Functions"
+        "title": "Collapse All Functions"
       },
       {
         "command": "extension.collapseFile",
@@ -28,30 +65,16 @@
       {
         "command": "extension.uncollapseAll",
         "title": "Uncollapse Everything"
+      },
+      {
+        "command": "extension.unfoldEverythingExceptSelected",
+        "title": "Unfold Everything Except Selected"
+      },
+      {
+        "command": "extension.foldAllExceptSelected",
+        "title": "Fold All Except Selected"
       }
-    ],
-   "keybindings": [
-  {
-    "command": "extension.collapseAllFunctions",
-    "key": "ctrl+alt+c",
-    "when": "editorTextFocus"
-  },
-  {
-    "command": "extension.collapseFile",
-    "key": "ctrl+alt+f",
-    "when": "editorTextFocus"
-  },
-  {
-    "command": "extension.collapseAll",
-    "key": "ctrl+alt+a",
-    "when": "editorTextFocus"
-  },
-  {
-    "command": "extension.uncollapseAll",
-    "key": "ctrl+alt+u",
-    "when": "editorTextFocus"
-  }
-]
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",
