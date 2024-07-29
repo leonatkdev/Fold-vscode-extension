@@ -1,7 +1,7 @@
 {
-  "name": "collapse",
-  "displayName": "AutoCollapse",
-  "description": "Collapse function and folders",
+  "name": "autofold",
+  "displayName": "AutoFold",
+  "description": "Fold function and folders",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.91.0"
@@ -15,21 +15,45 @@
     "viewsContainers": {
       "activitybar": [
         {
-          "id": "exampleContainer",
-          "title": "Example",
+          "id": "foldContainer",
+          "title": "Fold",
           "icon": "resources/icon.png"
         }
       ]
     },
     "views": {
-      "exampleContainer": [
+      "foldContainer": [
         {
-          "id": "exampleView",
+          "id": "foldView",
           "name": "Commands and Keybindings"
         }
       ]
     },
     "commands": [
+      {
+        "command": "extension.foldFunctions",
+        "title": "Fold Functions"
+      },
+      {
+        "command": "extension.foldFile",
+        "title": "Fold File"
+      },
+      {
+        "command": "extension.foldAll",
+        "title": "Fold Everything"
+      },
+      {
+        "command": "extension.unfoldAll",
+        "title": "Unfold Everything"
+      },
+      {
+        "command": "extension.foldAllExceptSelected",
+        "title": "Fold All Except Selected"
+      },
+      {
+        "command": "extension.unfoldAllExceptSelected",
+        "title": "Unfold All Except Selected"
+      },
       {
         "command": "extension.foldLevel1",
         "title": "Fold Level 1"
@@ -49,30 +73,63 @@
       {
         "command": "extension.foldLevel5",
         "title": "Fold Level 5"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "extension.foldFunctions",
+        "key": "ctrl+alt+f",
+        "when": "editorTextFocus"
       },
       {
-        "command": "extension.collapseAllFunctions",
-        "title": "Collapse All Functions"
+        "command": "extension.foldFile",
+        "key": "ctrl+alt+shift+f",
+        "when": "editorTextFocus"
       },
       {
-        "command": "extension.collapseFile",
-        "title": "Collapse File"
+        "command": "extension.foldAll",
+        "key": "ctrl+alt+a",
+        "when": "editorTextFocus"
       },
       {
-        "command": "extension.collapseAll",
-        "title": "Collapse Everything"
-      },
-      {
-        "command": "extension.uncollapseAll",
-        "title": "Uncollapse Everything"
-      },
-      {
-        "command": "extension.unfoldEverythingExceptSelected",
-        "title": "Unfold Everything Except Selected"
+        "command": "extension.unfoldAll",
+        "key": "ctrl+alt+shift+a",
+        "when": "editorTextFocus"
       },
       {
         "command": "extension.foldAllExceptSelected",
-        "title": "Fold All Except Selected"
+        "key": "ctrl+alt+e",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.unfoldAllExceptSelected",
+        "key": "ctrl+alt+shift+e",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.foldLevel1",
+        "key": "ctrl+alt+1",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.foldLevel2",
+        "key": "ctrl+alt+2",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.foldLevel3",
+        "key": "ctrl+alt+3",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.foldLevel4",
+        "key": "ctrl+alt+4",
+        "when": "editorTextFocus"
+      },
+      {
+        "command": "extension.foldLevel5",
+        "key": "ctrl+alt+5",
+        "when": "editorTextFocus"
       }
     ]
   },
