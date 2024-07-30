@@ -15,6 +15,11 @@ class CommandTreeItem extends vscode.TreeItem {
     this.description = description;
     this.iconPath = iconPath;
   }
+
+  // iconPath = {
+  //   light: path.join(__filename, '..', '..', 'resources', 'light', 'refresh.svg'),
+  //   dark: path.join(__filename, '..', '..', 'resources', 'dark', 'refresh.svg')
+  // };
 }
 
 class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem> {
@@ -51,32 +56,32 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
       new CommandTreeItem('---------------------------', '', '', undefined),
   
       // Basic Fold and Unfold Commands
-      this.createCommandItem('Fold Functions', 'Fold all functions in the current file.', 'extension.foldFunctions', 'numberOne.png'),
-      this.createCommandItem('Fold File', 'Fold all sections in the current file.', 'extension.foldFile', 'numberOne.png'),
-      this.createCommandItem('Fold Everything', 'Fold all foldable regions and folders.', 'extension.foldAll', 'numberOne.png'),
-      this.createCommandItem('Unfold Everything', 'Unfold all regions and folders.', 'extension.unfoldAll', 'numberOne.png'),
+      this.createCommandItem('Fold Functions', 'Fold all functions in the current file.', 'extension.foldFunctions', 'functions.svg'),
+      this.createCommandItem('Fold File', 'Fold all sections in the current file.', 'extension.foldFile', 'file.svg'),
+      this.createCommandItem('Fold Everything', 'Fold all foldable regions and folders.', 'extension.foldAll', 'folder.svg'),
+      this.createCommandItem('Unfold Everything', 'Unfold all regions and folders.', 'extension.unfoldAll', 'unfold.svg'),
   
       new CommandTreeItem('---------------------------', '', '', undefined),
   
       // Selective Fold/Unfold Commands
-      this.createCommandItem('Fold All Except Selected', 'Fold all sections except the selected one.', 'extension.foldAllExceptSelected', 'numberOne.png'),
-      this.createCommandItem('Unfold All Except Selected', 'Unfold all sections except the selected one.', 'extension.unfoldAllExceptSelected', 'numberOne.png'),
+      this.createCommandItem('Fold All Except Selected', 'Fold all sections except the selected one.', 'extension.foldAllExceptSelected', 'selected.svg'),
+      this.createCommandItem('Unfold All Except Selected', 'Unfold all sections except the selected one.', 'extension.unfoldAllExceptSelected', 'selected.svg'),
   
       new CommandTreeItem('---------------------------', '', '', undefined),
   
       // Specific Level Folding Commands
-      this.createCommandItem('Fold Level 1', 'Fold to level 1, typically collapsing the most outer structures like classes or namespaces.', 'extension.foldLevel1', 'numberOne.png'),
-      this.createCommandItem('Fold Level 2', 'Fold to level 2, usually collapsing function definitions or inner classes.', 'extension.foldLevel2', 'numberTwo.png'),
-      this.createCommandItem('Fold Level 3', 'Fold to level 3, collapsing detailed blocks like loops or conditionals.', 'extension.foldLevel3', 'numberThree.png'),
-      this.createCommandItem('Fold Level 4', 'Fold to level 4, collapsing finer structures like nested blocks within functions.', 'extension.foldLevel4', 'numberFour.png'),
-      this.createCommandItem('Fold Level 5', 'Fold to level 5, collapsing the smallest detail levels, such as inline comments or small code blocks.', 'extension.foldLevel5', 'numberFive.png'),
+      this.createCommandItem('Fold Level 1', 'Fold to level 1, typically collapsing the most outer structures like classes or namespaces.', 'extension.foldLevel1', 'numberOne.svg'),
+      this.createCommandItem('Fold Level 2', 'Fold to level 2, usually collapsing function definitions or inner classes.', 'extension.foldLevel2', 'numberTwo.svg'),
+      this.createCommandItem('Fold Level 3', 'Fold to level 3, collapsing detailed blocks like loops or conditionals.', 'extension.foldLevel3', 'numberThree.svg'),
+      this.createCommandItem('Fold Level 4', 'Fold to level 4, collapsing finer structures like nested blocks within functions.', 'extension.foldLevel4', 'numberFour.svg'),
+      this.createCommandItem('Fold Level 5', 'Fold to level 5, collapsing the smallest detail levels, such as inline comments or small code blocks.', 'extension.foldLevel5', 'numberFive.svg'),
       new CommandTreeItem('---------------------------', '', '', undefined),
     ];
   }
 
   private createCommandItem(label: string, description: string, commandId: string, iconName: string): CommandTreeItem {
     console.log('iconName', iconName);
-    const iconPath = vscode.Uri.file(path.join(__dirname, 'resources', iconName));
+    const iconPath = vscode.Uri.file(path.join(__filename, '..', '..', 'resources', 'light', iconName));
     console.log('iconPath', iconPath);
     return new CommandTreeItem(label, description, commandId, iconPath);
   }
@@ -92,7 +97,7 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
   private createKeybindingItem(commandId: string, label: string, defaultShortcut: string): CommandTreeItem {
     const keybinding = this.getKeybindingForCommand(commandId) || defaultShortcut;
     const iconPath = vscode.Uri.file(path.join(__dirname, 'resources', 'collapseFile.png'));
-    return new CommandTreeItem(label, `Shortcut: ${keybinding}`, commandId, iconPath, vscode.TreeItemCollapsibleState.None, true);
+    return new CommandTreeItem(label, `Default Shortcut: ${keybinding}`, commandId, iconPath, vscode.TreeItemCollapsibleState.None, true);
   }
 
   private getKeybindingForCommand(commandId: string): string | undefined {
@@ -199,12 +204,10 @@ export function activate(context: vscode.ExtensionContext) {
     );
   });
 
-  // Listen for configuration changes (general settings)
+  // Listen for configuration changes
   vscode.workspace.onDidChangeConfiguration(event => {
     if (event.affectsConfiguration('keybindings')) {
-      // This would react to any change in the keybindings configuration
-      vscode.window.showInformationMessage('Keybindings have been updated. Please restart the extension for changes to take effect.');
-      // Optionally, trigger a refresh or update the internal state of your extension
+      // Handle keybinding changes
       treeDataProvider.refresh();
     }
   });

@@ -17,7 +17,7 @@
         {
           "id": "foldContainer",
           "title": "Fold",
-          "icon": "resources/icon.png"
+          "icon": "resources/light/icon.png"
         }
       ]
     },
@@ -78,12 +78,12 @@
     "keybindings": [
       {
         "command": "extension.foldFunctions",
-        "key": "ctrl+alt+f",
+        "key": "ctrl+alt+shift+f",
         "when": "editorTextFocus"
       },
       {
         "command": "extension.foldFile",
-        "key": "ctrl+alt+shift+f",
+        "key": "ctrl+alt+f",
         "when": "editorTextFocus"
       },
       {
@@ -93,7 +93,7 @@
       },
       {
         "command": "extension.unfoldAll",
-        "key": "ctrl+alt+shift+a",
+        "key": "ctrl+alt+u",
         "when": "editorTextFocus"
       },
       {
