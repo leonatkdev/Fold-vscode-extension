@@ -1,71 +1,71 @@
-# collapse README
+# [AutoFold]
 
-This is the README for your extension "collapse". After writing up a brief description, we recommend including the following sections.
+[![Version](https://img.shields.io/visual-studio-marketplace/v/your-publisher.your-extension)](https://marketplace.visualstudio.com/items?itemName=your-publisher.your-extension)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/your-publisher.your-extension)](https://marketplace.visualstudio.com/items?itemName=your-publisher.your-extension)
+[![Rating](https://img.shields.io/visual-studio-marketplace/r/your-publisher.your-extension)](https://marketplace.visualstudio.com/items?itemName=your-publisher.your-extension)
+
+A Visual Studio Code extension to efficiently manage folding and more.
 
 ## Features
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+- **Fold Functions**: Fold all function blocks in the current file.
+- **Fold File**: Fold all sections in the current file.
+- **Fold Everything**: Fold all foldable regions and folders.
+- **Unfold Everything**: Unfold all regions and folders.
+- **Fold All Except Selected**: Fold all sections except the currently selected one.
+- **Unfold All Except Selected**: Unfold all sections except the currently selected one.
+- **Fold Level 1-5**: Fold to specified levels, typically used for different levels of code nesting.
 
-For example if there is an image subfolder under your extension project workspace:
+## Installation
 
-\!\[feature X\]\(images/feature-x.png\)
+1. Open Visual Studio Code.
+2. Go to the Extensions view by clicking on the Extensions icon in the Activity Bar on the side of the window.
+3. Search for `[Your Extension Name]`.
+4. Click the Install button.
 
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
+Or install via the command line:
 
-## Requirements
+```sh
+code --install-extension your-publisher.your-extension
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+### Default Keybindings
 
-## Extension Settings
+| Command                    | Keybinding          |
+|----------------------------|---------------------|
+| Fold Functions             | `Ctrl+Alt+F`        |
+| Fold File                  | `Ctrl+Alt+Shift+F`  |
+| Fold Everything            | `Ctrl+Alt+A`        |
+| Unfold Everything          | `Ctrl+Alt+Shift+A`  |
+| Fold All Except Selected   | `Ctrl+Alt+E`        |
+| Unfold All Except Selected | `Ctrl+Alt+Shift+E`  |
+| Fold Level 1               | `Ctrl+Alt+1`        |
+| Fold Level 2               | `Ctrl+Alt+2`        |
+| Fold Level 3               | `Ctrl+Alt+3`        |
+| Fold Level 4               | `Ctrl+Alt+4`        |
+| Fold Level 5               | `Ctrl+Alt+5`        |
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
 
-For example:
 
-This extension contributes the following settings:
+### 3. **Preview and Adjust**
 
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
+- **Preview in Markdown Viewer**: Use the Markdown preview feature (`Ctrl+Shift+V` in VSCode) to check how the file looks. This helps identify any formatting issues or inconsistencies.
+- **Ensure Consistency**: Check for consistent use of headings, bullet points, and tables. For example, always use `##` for main sections and `###` for subsections.
 
-## Known Issues
+### 4. **Keep It Clean and Simple**
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+- **Avoid Excessive Decoration**: Keep the formatting clean and minimal. Avoid using too many different styles or decorations, as they can distract from the content.
+- **Use Clear Language**: Be clear and concise. Avoid jargon or overly complex language.
 
-## Release Notes
+### 5. **Check for Errors**
 
-Users appreciate release notes as you update your extension.
+- **Spelling and Grammar**: Check for spelling and grammar mistakes.
+- **Correct Links and Paths**: Ensure that all links, like badges or external links, are correct and working.
 
-### 1.0.0
+### 6. **Save and Commit**
 
-Initial release of ...
+Once you're satisfied with the README, save the changes and commit them to your repository.
 
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
-
----
-
-## Following extension guidelines
-
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
-
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
-
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+```bash
+git add README.md
+git commit -m "Update README with usage and installation instructions"
+git push origin main
