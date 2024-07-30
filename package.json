@@ -17,7 +17,7 @@
         {
           "id": "foldContainer",
           "title": "Fold",
-          "icon": "resources/light/icon.png"
+          "icon": "resources/light/icon.svg"
         }
       ]
     },
