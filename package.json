@@ -3,6 +3,8 @@
   "displayName": "AutoFold",
   "description": "Fold function and folders",
   "version": "0.0.1",
+  "repository": "https://github.com/leonatkdev/extension-vscode-",
+  "publisher": "LeonatKrasniqi",  
   "engines": {
     "vscode": "^1.91.0"
   },
