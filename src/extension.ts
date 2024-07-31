@@ -11,7 +11,7 @@ class CommandTreeItem extends vscode.TreeItem {
     public readonly isKeybindingItem: boolean = false
   ) {
     super(label, collapsibleState);
-    this.command = commandId ? { command: 'extension.handleCommand', title: label, arguments: [commandId, isKeybindingItem] } : undefined;
+    this.command = commandId ? { command: 'autofold.handleCommand', title: label, arguments: [commandId, isKeybindingItem] } : undefined;
     this.description = description;
     this.iconPath = iconPath;
   }
@@ -56,41 +56,39 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
       new CommandTreeItem('---------------------------', '', '', undefined),
   
       // Basic Fold and Unfold Commands
-      this.createCommandItem('Fold Functions', 'Fold all functions in the current file.', 'extension.foldFunctions', 'functions.svg'),
-      this.createCommandItem('Fold File', 'Fold all sections in the current file.', 'extension.foldFile', 'file.svg'),
-      this.createCommandItem('Fold Everything', 'Fold all foldable regions and folders.', 'extension.foldAll', 'folder.svg'),
-      this.createCommandItem('Unfold Everything', 'Unfold all regions and folders.', 'extension.unfoldAll', 'unfold.svg'),
+      this.createCommandItem('Fold Functions', 'Fold all functions in the current file.', 'autofold.foldFunctions', 'functions.svg'),
+      this.createCommandItem('Fold File', 'Fold all sections in the current file.', 'autofold.foldFile', 'file.svg'),
+      this.createCommandItem('Fold Everything', 'Fold all foldable regions and folders.', 'autofold.foldAll', 'folder.svg'),
+      this.createCommandItem('Unfold Everything', 'Unfold all regions and folders.', 'autofold.unfoldAll', 'unfold.svg'),
   
       new CommandTreeItem('---------------------------', '', '', undefined),
   
       // Selective Fold/Unfold Commands
-      this.createCommandItem('Fold All Except Selected', 'Fold all sections except the selected one.', 'extension.foldAllExceptSelected', 'selected.svg'),
-      this.createCommandItem('Unfold All Except Selected', 'Unfold all sections except the selected one.', 'extension.unfoldAllExceptSelected', 'selected.svg'),
+      this.createCommandItem('Fold All Except Selected', 'Fold all sections except the selected one.', 'autofold.foldAllExceptSelected', 'selected.svg'),
+      this.createCommandItem('Unfold All Except Selected', 'Unfold all sections except the selected one.', 'autofold.unfoldAllExceptSelected', 'selected.svg'),
   
       new CommandTreeItem('---------------------------', '', '', undefined),
   
       // Specific Level Folding Commands
-      this.createCommandItem('Fold Level 1', 'Fold to level 1, typically collapsing the most outer structures like classes or namespaces.', 'extension.foldLevel1', 'numberOne.svg'),
-      this.createCommandItem('Fold Level 2', 'Fold to level 2, usually collapsing function definitions or inner classes.', 'extension.foldLevel2', 'numberTwo.svg'),
-      this.createCommandItem('Fold Level 3', 'Fold to level 3, collapsing detailed blocks like loops or conditionals.', 'extension.foldLevel3', 'numberThree.svg'),
-      this.createCommandItem('Fold Level 4', 'Fold to level 4, collapsing finer structures like nested blocks within functions.', 'extension.foldLevel4', 'numberFour.svg'),
-      this.createCommandItem('Fold Level 5', 'Fold to level 5, collapsing the smallest detail levels, such as inline comments or small code blocks.', 'extension.foldLevel5', 'numberFive.svg'),
+      this.createCommandItem('Fold Level 1', 'Fold to level 1, typically collapsing the most outer structures like classes or namespaces.', 'autofold.foldLevel1', 'numberOne.svg'),
+      this.createCommandItem('Fold Level 2', 'Fold to level 2, usually collapsing function definitions or inner classes.', 'autofold.foldLevel2', 'numberTwo.svg'),
+      this.createCommandItem('Fold Level 3', 'Fold to level 3, collapsing detailed blocks like loops or conditionals.', 'autofold.foldLevel3', 'numberThree.svg'),
+      this.createCommandItem('Fold Level 4', 'Fold to level 4, collapsing finer structures like nested blocks within functions.', 'autofold.foldLevel4', 'numberFour.svg'),
+      this.createCommandItem('Fold Level 5', 'Fold to level 5, collapsing the smallest detail levels, such as inline comments or small code blocks.', 'autofold.foldLevel5', 'numberFive.svg'),
       new CommandTreeItem('---------------------------', '', '', undefined),
     ];
   }
 
   private createCommandItem(label: string, description: string, commandId: string, iconName: string): CommandTreeItem {
-    console.log('iconName', iconName);
     const iconPath = vscode.Uri.file(path.join(__filename, '..', '..', 'resources', 'light', iconName));
-    console.log('iconPath', iconPath);
     return new CommandTreeItem(label, description, commandId, iconPath);
   }
 
   private getKeybindingItems(): CommandTreeItem[] {
     return [
-      this.createKeybindingItem('extension.foldFile', 'Fold File', 'Ctrl+Alt+F'),
-      this.createKeybindingItem('extension.foldAll', 'Fold Everything', 'Ctrl+Alt+A'),
-      this.createKeybindingItem('extension.unfoldAll', 'Unfold Everything', 'Ctrl+Alt+U')
+      this.createKeybindingItem('autofold.foldFile', 'Fold File', 'Ctrl+Alt+F'),
+      this.createKeybindingItem('autofold.foldAll', 'Fold Everything', 'Ctrl+Alt+A'),
+      this.createKeybindingItem('autofold.unfoldAll', 'Unfold Everything', 'Ctrl+Alt+U')
     ];
   }
 
@@ -108,11 +106,12 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
 }
 
 export function activate(context: vscode.ExtensionContext) {
+  
   const treeDataProvider = new CommandTreeDataProvider();
   vscode.window.registerTreeDataProvider('foldView', treeDataProvider);
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.handleCommand', (commandId: string, isKeybindingItem: boolean) => {
+    vscode.commands.registerCommand('autofold.handleCommand', (commandId: string, isKeybindingItem: boolean) => {
       if (isKeybindingItem) {
         vscode.window.showInformationMessage(`To change the keybinding for "${commandId}", please search for it in the Keybindings settings.`);
         vscode.commands.executeCommand('workbench.action.openGlobalKeybindings');
@@ -123,7 +122,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.foldFunctions', () => {
+    vscode.commands.registerCommand('autofold.foldFunctions', () => {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
         const { document } = editor;
@@ -140,14 +139,14 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.foldFile', () => {
+    vscode.commands.registerCommand('autofold.foldFile', () => {
       vscode.window.showInformationMessage('Folding all sections in the file.');
       vscode.commands.executeCommand('editor.foldAll');
     })
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.foldAll', () => {
+    vscode.commands.registerCommand('autofold.foldAll', () => {
       vscode.window.showInformationMessage('Folding all foldable regions and folders.');
       vscode.commands.executeCommand('editor.foldAll');
       vscode.commands.executeCommand('workbench.files.action.collapseExplorerFolders');
@@ -155,7 +154,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.unfoldAll', () => {
+    vscode.commands.registerCommand('autofold.unfoldAll', () => {
       vscode.window.showInformationMessage('Unfolding all regions and folders.');
       vscode.commands.executeCommand('editor.unfoldAll');
       vscode.commands.executeCommand('workbench.files.action.expandExplorerFolders');
@@ -163,33 +162,54 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.foldAllExceptSelected', () => {
+    vscode.commands.registerCommand('autofold.foldAllExceptSelected', async () => {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
         const selectedRange = editor.selection;
-        vscode.commands.executeCommand('editor.foldAll').then(() => {
-          vscode.commands.executeCommand('editor.unfold', {
-            selectionLines: [selectedRange.start.line, selectedRange.end.line]
-          });
-        });
+
+        // Fold all regions first
+        await vscode.commands.executeCommand('editor.foldAll');
+
+        // Now unfold the regions within the selected range
+        const startLine = selectedRange.start.line;
+        const endLine = selectedRange.end.line;
+
+        // Unfold from the start line to the end line
+        for (let lineNumber = startLine; lineNumber <= endLine; lineNumber++) {
+          await vscode.commands.executeCommand('editor.unfold', { selectionLines: [lineNumber] });
+        }
       }
     })
   );
 
+
   context.subscriptions.push(
-    vscode.commands.registerCommand('extension.unfoldAllExceptSelected', () => {
+    vscode.commands.registerCommand('autofold.unfoldAllExceptSelected', async () => {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
         const selectedRange = editor.selection;
-        vscode.commands.executeCommand('editor.unfoldAll').then(() => {
-          vscode.commands.executeCommand('editor.foldAll');
-          for (let i = 0; i < selectedRange.start.line; i++) {
-            vscode.commands.executeCommand('editor.fold', { lineNumber: i });
+
+        // Unfold all regions first
+        await vscode.commands.executeCommand('editor.unfoldAll');
+
+        // Now fold all regions except the ones within the selected range
+        const startLine = selectedRange.start.line;
+        const endLine = selectedRange.end.line;
+        const totalLines = editor.document.lineCount;
+
+        // Fold lines before the selected range
+        if (startLine > 0) {
+          for (let lineNumber = 0; lineNumber < startLine; lineNumber++) {
+            await vscode.commands.executeCommand('editor.fold', { selectionLines: [lineNumber] });
           }
-          for (let i = selectedRange.end.line + 1; i < editor.document.lineCount; i++) {
-            vscode.commands.executeCommand('editor.fold', { lineNumber: i });
+        }
+
+        // Fold lines after the selected range
+        if (endLine < totalLines - 1) {
+          for (let lineNumber = endLine + 1; lineNumber < totalLines; lineNumber++) {
+            await vscode.commands.executeCommand('editor.fold', { selectionLines: [lineNumber] });
           }
-        });
+        }
       }
     })
   );
@@ -197,7 +217,7 @@ export function activate(context: vscode.ExtensionContext) {
   const foldLevels = [1, 2, 3, 4, 5];
   foldLevels.forEach(level => {
     context.subscriptions.push(
-      vscode.commands.registerCommand(`extension.foldLevel${level}`, () => {
+      vscode.commands.registerCommand(`autofold.foldLevel${level}`, () => {
         vscode.window.showInformationMessage(`Folding to level ${level}.`);
         vscode.commands.executeCommand(`editor.foldLevel${level}`);
       })

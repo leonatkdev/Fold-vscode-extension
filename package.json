@@ -31,103 +31,103 @@
     },
     "commands": [
       {
-        "command": "extension.foldFunctions",
+        "command": "autofold.foldFunctions",
         "title": "Fold Functions"
       },
       {
-        "command": "extension.foldFile",
+        "command": "autofold.foldFile",
         "title": "Fold File"
       },
       {
-        "command": "extension.foldAll",
+        "command": "autofold.foldAll",
         "title": "Fold Everything"
       },
       {
-        "command": "extension.unfoldAll",
+        "command": "autofold.unfoldAll",
         "title": "Unfold Everything"
       },
       {
-        "command": "extension.foldAllExceptSelected",
+        "command": "autofold.foldAllExceptSelected",
         "title": "Fold All Except Selected"
       },
       {
-        "command": "extension.unfoldAllExceptSelected",
+        "command": "autofold.unfoldAllExceptSelected",
         "title": "Unfold All Except Selected"
       },
       {
-        "command": "extension.foldLevel1",
+        "command": "autofold.foldLevel1",
         "title": "Fold Level 1"
       },
       {
-        "command": "extension.foldLevel2",
+        "command": "autofold.foldLevel2",
         "title": "Fold Level 2"
       },
       {
-        "command": "extension.foldLevel3",
+        "command": "autofold.foldLevel3",
         "title": "Fold Level 3"
       },
       {
-        "command": "extension.foldLevel4",
+        "command": "autofold.foldLevel4",
         "title": "Fold Level 4"
       },
       {
-        "command": "extension.foldLevel5",
+        "command": "autofold.foldLevel5",
         "title": "Fold Level 5"
       }
     ],
     "keybindings": [
       {
-        "command": "extension.foldFunctions",
-        "key": "ctrl+alt+shift+f",
+        "command": "autofold.foldFunctions",
+        "key": "ctrl+win+w",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.foldFile",
+        "command": "autofold.foldFile",
         "key": "ctrl+alt+f",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.foldAll",
+        "command": "autofold.foldAll",
         "key": "ctrl+alt+a",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.unfoldAll",
+        "command": "autofold.unfoldAll",
         "key": "ctrl+alt+u",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.foldAllExceptSelected",
+        "command": "autofold.foldAllExceptSelected",
         "key": "ctrl+alt+e",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.unfoldAllExceptSelected",
+        "command": "autofold.unfoldAllExceptSelected",
         "key": "ctrl+alt+shift+e",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.foldLevel1",
+        "command": "autofold.foldLevel1",
         "key": "ctrl+alt+1",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.foldLevel2",
+        "command": "autofold.foldLevel2",
         "key": "ctrl+alt+2",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.foldLevel3",
+        "command": "autofold.foldLevel3",
         "key": "ctrl+alt+3",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.foldLevel4",
+        "command": "autofold.foldLevel4",
         "key": "ctrl+alt+4",
         "when": "editorTextFocus"
       },
       {
-        "command": "extension.foldLevel5",
+        "command": "autofold.foldLevel5",
         "key": "ctrl+alt+5",
         "when": "editorTextFocus"
       }
