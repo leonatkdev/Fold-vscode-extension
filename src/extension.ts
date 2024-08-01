@@ -40,6 +40,9 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
     } else if (element.label === 'Keybindings') {
       return this.getKeybindingItems();
     }
+    else if (element.label === 'Bonus') {
+      return this.getKeybindingItemsBonus();
+    }
     return [];
   }
 
@@ -47,7 +50,8 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
     return [
       new CommandTreeItem('Commands and Descriptions', '', '', undefined, vscode.TreeItemCollapsibleState.None),
       ...this.getCommandDescriptionItems(),
-      new CommandTreeItem('Keybindings', '', '', undefined, vscode.TreeItemCollapsibleState.Expanded)
+      new CommandTreeItem('Keybindings', '', '', undefined, vscode.TreeItemCollapsibleState.Expanded),
+      new CommandTreeItem('Bonus', '', '', undefined, vscode.TreeItemCollapsibleState.Expanded)
     ];
   }
 
@@ -86,16 +90,25 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
 
   private getKeybindingItems(): CommandTreeItem[] {
     return [
-      this.createKeybindingItem('autofold.foldFile', 'Fold File', 'Ctrl+Alt+F'),
-      this.createKeybindingItem('autofold.foldAll', 'Fold Everything', 'Ctrl+Alt+A'),
-      this.createKeybindingItem('autofold.unfoldAll', 'Unfold Everything', 'Ctrl+Alt+U')
+      this.createKeybindingItem('autofold.foldFile', 'Fold File', 'Default Shortcut: Ctrl+Alt+F', ""),
+      this.createKeybindingItem('autofold.foldAll', 'Fold Everything', 'Default Shortcut: Ctrl+Alt+A', ""),
+      this.createKeybindingItem('autofold.unfoldAll', 'Unfold Everything', 'Default Shortcut: Ctrl+Alt+U', "")
     ];
   }
 
-  private createKeybindingItem(commandId: string, label: string, defaultShortcut: string): CommandTreeItem {
+  private getKeybindingItemsBonus(): CommandTreeItem[] {
+    return [
+      this.createKeybindingItem('autofold.singleQoute', 'Single Qoute', 'Format to Single Qoute', "noDouble.svg"),
+      this.createKeybindingItem('autofold.DoubleQoute', 'Double Qoute', 'Format to Double Qoute', "doubleQoute.svg"),
+    ];
+  }
+
+  private createKeybindingItem(commandId: string, label: string, defaultShortcut: string, iconName: string): CommandTreeItem {
     const keybinding = this.getKeybindingForCommand(commandId) || defaultShortcut;
-    const iconPath = vscode.Uri.file(path.join(__dirname, 'resources', 'collapseFile.png'));
-    return new CommandTreeItem(label, `Default Shortcut: ${keybinding}`, commandId, iconPath, vscode.TreeItemCollapsibleState.None, true);
+    // const iconPath = vscode.Uri.file(path.join(__dirname, 'resources', 'collapseFile.png'));
+    const iconPath = vscode.Uri.file(path.join(__filename, '..', '..', 'resources', 'light', iconName));
+
+    return new CommandTreeItem(label, `${keybinding}`, commandId, iconPath, vscode.TreeItemCollapsibleState.None, true);
   }
 
   private getKeybindingForCommand(commandId: string): string | undefined {

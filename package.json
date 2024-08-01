@@ -10,7 +10,7 @@
     "vscode": "^1.91.0"
   },
   "categories": [
-    "Productivity",
+    "Programming Languages",
     "Other"
   ],
   "keywords": [
@@ -35,7 +35,7 @@
         {
           "id": "foldContainer",
           "title": "Fold",
-          "icon": "resources/light/icon.svg"
+          "icon": "resources/line.svg"
         }
       ]
     },
