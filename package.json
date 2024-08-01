@@ -1,18 +1,34 @@
 {
-  "name": "autofold",
-  "displayName": "AutoFold",
+  "name": "foldvscode",
+  "displayName": "Fold VSCode",
   "description": "Fold function and folders",
   "version": "0.0.1",
   "repository": "https://github.com/leonatkdev/extension-vscode-",
-  "publisher": "LeonatKrasniqi",  
+  "publisher": "LeonatKrasniqi",
+  "license": "MIT",
   "engines": {
     "vscode": "^1.91.0"
   },
   "categories": [
+    "Productivity",
     "Other"
+  ],
+  "keywords": [
+    "fold",
+    "unfold",
+    "code folding",
+    "collapse",
+    "expand",
+    "vscode",
+    "productivity"
   ],
   "activationEvents": [],
   "main": "./dist/extension.js",
+  "icon": "resources/vsicon.png",
+  "galleryBanner": {
+    "color": "#007acc",
+    "theme": "dark"
+  },
   "contributes": {
     "viewsContainers": {
       "activitybar": [
