@@ -15,11 +15,6 @@ class CommandTreeItem extends vscode.TreeItem {
     this.description = description;
     this.iconPath = iconPath;
   }
-
-  // iconPath = {
-  //   light: path.join(__filename, '..', '..', 'resources', 'light', 'refresh.svg'),
-  //   dark: path.join(__filename, '..', '..', 'resources', 'dark', 'refresh.svg')
-  // };
 }
 
 class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem> {
@@ -39,8 +34,7 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
       return this.getRootItems();
     } else if (element.label === 'Keybindings') {
       return this.getKeybindingItems();
-    }
-    else if (element.label === 'Bonus') {
+    } else if (element.label === 'Bonus') {
       return this.getKeybindingItemsBonus();
     }
     return [];
@@ -58,21 +52,21 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
   private getCommandDescriptionItems(): CommandTreeItem[] {
     return [
       new CommandTreeItem('---------------------------', '', '', undefined),
-  
+
       // Basic Fold and Unfold Commands
       this.createCommandItem('Fold Functions', 'Fold all functions in the current file.', 'autofold.foldFunctions', 'functions.svg'),
       this.createCommandItem('Fold File', 'Fold all sections in the current file.', 'autofold.foldFile', 'file.svg'),
       this.createCommandItem('Fold Everything', 'Fold all foldable regions and folders.', 'autofold.foldAll', 'folder.svg'),
       this.createCommandItem('Unfold Everything', 'Unfold all regions and folders.', 'autofold.unfoldAll', 'unfold.svg'),
-  
+
       new CommandTreeItem('---------------------------', '', '', undefined),
-  
+
       // Selective Fold/Unfold Commands
       this.createCommandItem('Fold All Except Selected', 'Fold all sections except the selected one.', 'autofold.foldAllExceptSelected', 'selected.svg'),
       this.createCommandItem('Unfold All Except Selected', 'Unfold all sections except the selected one.', 'autofold.unfoldAllExceptSelected', 'selected.svg'),
-  
+
       new CommandTreeItem('---------------------------', '', '', undefined),
-  
+
       // Specific Level Folding Commands
       this.createCommandItem('Fold Level 1', 'Fold to level 1, typically collapsing the most outer structures like classes or namespaces.', 'autofold.foldLevel1', 'numberOne.svg'),
       this.createCommandItem('Fold Level 2', 'Fold to level 2, usually collapsing function definitions or inner classes.', 'autofold.foldLevel2', 'numberTwo.svg'),
@@ -80,6 +74,13 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
       this.createCommandItem('Fold Level 4', 'Fold to level 4, collapsing finer structures like nested blocks within functions.', 'autofold.foldLevel4', 'numberFour.svg'),
       this.createCommandItem('Fold Level 5', 'Fold to level 5, collapsing the smallest detail levels, such as inline comments or small code blocks.', 'autofold.foldLevel5', 'numberFive.svg'),
       new CommandTreeItem('---------------------------', '', '', undefined),
+    ];
+  }
+
+  private getKeybindingItemsBonus(): CommandTreeItem[] {
+    return [
+      this.createCommandItem('Single Quote', 'Format to Single Quote', 'autofold.singleQoute',  "noDouble.svg"),
+      this.createCommandItem('Double Quote', 'Format to Double Quote', 'autofold.DoubleQoute',  "doubleQoute.svg"),
     ];
   }
 
@@ -96,16 +97,9 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
     ];
   }
 
-  private getKeybindingItemsBonus(): CommandTreeItem[] {
-    return [
-      this.createKeybindingItem('autofold.singleQoute', 'Single Qoute', 'Format to Single Qoute', "noDouble.svg"),
-      this.createKeybindingItem('autofold.DoubleQoute', 'Double Qoute', 'Format to Double Qoute', "doubleQoute.svg"),
-    ];
-  }
 
   private createKeybindingItem(commandId: string, label: string, defaultShortcut: string, iconName: string): CommandTreeItem {
     const keybinding = this.getKeybindingForCommand(commandId) || defaultShortcut;
-    // const iconPath = vscode.Uri.file(path.join(__dirname, 'resources', 'collapseFile.png'));
     const iconPath = vscode.Uri.file(path.join(__filename, '..', '..', 'resources', 'light', iconName));
 
     return new CommandTreeItem(label, `${keybinding}`, commandId, iconPath, vscode.TreeItemCollapsibleState.None, true);
@@ -118,8 +112,21 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
   }
 }
 
+function replaceQuotes(document: vscode.TextDocument, editor: vscode.TextEditor, targetQuote: '"' | "'"): Thenable<boolean> {
+  const singleQuoteRegex = /'/g;
+  const doubleQuoteRegex = /"/g;
+
+  const edit = new vscode.WorkspaceEdit();
+  for (let i = 0; i < document.lineCount; i++) {
+    const line = document.lineAt(i);
+    const newText = targetQuote === '"' ? line.text.replace(singleQuoteRegex, '"') : line.text.replace(doubleQuoteRegex, "'");
+    edit.replace(document.uri, line.range, newText);
+  }
+  return vscode.workspace.applyEdit(edit);
+}
+
 export function activate(context: vscode.ExtensionContext) {
-  
+
   const treeDataProvider = new CommandTreeDataProvider();
   vscode.window.registerTreeDataProvider('foldView', treeDataProvider);
 
@@ -195,7 +202,6 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
-
   context.subscriptions.push(
     vscode.commands.registerCommand('autofold.unfoldAllExceptSelected', async () => {
       const editor = vscode.window.activeTextEditor;
@@ -236,6 +242,28 @@ export function activate(context: vscode.ExtensionContext) {
       })
     );
   });
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('autofold.singleQoute', () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        replaceQuotes(editor.document, editor, "'").then(() => {
+          vscode.window.showInformationMessage('Formatted to single quotes.');
+        });
+      }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('autofold.DoubleQoute', () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        replaceQuotes(editor.document, editor, '"').then(() => {
+          vscode.window.showInformationMessage('Formatted to double quotes.');
+        });
+      }
+    })
+  );
 
   // Listen for configuration changes
   vscode.workspace.onDidChangeConfiguration(event => {
