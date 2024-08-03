@@ -176,7 +176,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand('autofold.unfoldFile', () => {
       vscode.window.showInformationMessage('Unfolding all regions and folders.');
-      vscode.commands.executeCommand('editor.unfoldFile');
+      vscode.commands.executeCommand('editor.unfoldAll');
       vscode.commands.executeCommand('workbench.files.action.expandExplorerFolders');
     })
   );
