@@ -2,7 +2,7 @@
   "name": "foldvscode",
   "displayName": "Fold VSCode",
   "description": "Fold function and folders",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": "https://github.com/leonatkdev/extension-vscode-",
   "publisher": "LeonatKrasniqi",
   "license": "MIT",
@@ -58,11 +58,11 @@
       },
       {
         "command": "autofold.foldAll",
-        "title": "Fold Everything"
+        "title": "Fold File and Folders"
       },
       {
-        "command": "autofold.unfoldAll",
-        "title": "Unfold Everything"
+        "command": "autofold.unfoldFile",
+        "title": "Unfold File"
       },
       {
         "command": "autofold.foldAllExceptSelected",
@@ -110,7 +110,7 @@
         "when": "editorTextFocus"
       },
       {
-        "command": "autofold.unfoldAll",
+        "command": "autofold.unfoldFile",
         "key": "ctrl+alt+u",
         "when": "editorTextFocus"
       },
@@ -149,7 +149,31 @@
         "key": "ctrl+alt+5",
         "when": "editorTextFocus"
       }
-    ]
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "autofold.foldFile",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "autofold.foldAll",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "autofold.unfoldFile",
+          "when": "editorTextFocus"
+        },
+        {
+          "command": "autofold.foldAllExceptSelected",
+          "when": "editorHasSelection"
+        },
+        {
+          "command": "autofold.unfoldAllExceptSelected",
+          "when": "editorHasSelection"
+        }
+      ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

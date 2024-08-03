@@ -56,8 +56,8 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
       // Basic Fold and Unfold Commands
       this.createCommandItem('Fold Functions', 'Fold all functions in the current file.', 'autofold.foldFunctions', 'functions.svg'),
       this.createCommandItem('Fold File', 'Fold all sections in the current file.', 'autofold.foldFile', 'file.svg'),
-      this.createCommandItem('Fold Everything', 'Fold all foldable regions and folders.', 'autofold.foldAll', 'folder.svg'),
-      this.createCommandItem('Unfold Everything', 'Unfold all regions and folders.', 'autofold.unfoldAll', 'unfold.svg'),
+      this.createCommandItem('Fold File and Folders', 'Fold all foldable regions and folders.', 'autofold.foldAll', 'folder.svg'),
+      this.createCommandItem('Unfold File', 'Unfold all regions in the current file. .', 'autofold.unfoldFile', 'unfold.svg'),
 
       new CommandTreeItem('---------------------------', '', '', undefined),
 
@@ -93,7 +93,7 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
     return [
       this.createKeybindingItem('autofold.foldFile', 'Fold File', 'Default Shortcut: Ctrl+Alt+F', ""),
       this.createKeybindingItem('autofold.foldAll', 'Fold Everything', 'Default Shortcut: Ctrl+Alt+A', ""),
-      this.createKeybindingItem('autofold.unfoldAll', 'Unfold Everything', 'Default Shortcut: Ctrl+Alt+U', "")
+      this.createKeybindingItem('autofold.unfoldFile', 'Unfold Everything', 'Default Shortcut: Ctrl+Alt+U', "")
     ];
   }
 
@@ -174,9 +174,9 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.unfoldAll', () => {
+    vscode.commands.registerCommand('autofold.unfoldFile', () => {
       vscode.window.showInformationMessage('Unfolding all regions and folders.');
-      vscode.commands.executeCommand('editor.unfoldAll');
+      vscode.commands.executeCommand('editor.unfoldFile');
       vscode.commands.executeCommand('workbench.files.action.expandExplorerFolders');
     })
   );
@@ -209,7 +209,7 @@ export function activate(context: vscode.ExtensionContext) {
         const selectedRange = editor.selection;
 
         // Unfold all regions first
-        await vscode.commands.executeCommand('editor.unfoldAll');
+        await vscode.commands.executeCommand('editor.unfoldFile');
 
         // Now fold all regions except the ones within the selected range
         const startLine = selectedRange.start.line;
@@ -261,6 +261,20 @@ export function activate(context: vscode.ExtensionContext) {
         replaceQuotes(editor.document, editor, '"').then(() => {
           vscode.window.showInformationMessage('Formatted to double quotes.');
         });
+      }
+    })
+  );
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand('autofold.foldSelection', () => {
+      const editor = vscode.window.activeTextEditor;
+      if (editor) {
+        const { selection } = editor;
+        if (!selection.isEmpty) {
+          vscode.commands.executeCommand('editor.fold', { selectionLines: [selection.start.line, selection.end.line] });
+        } else {
+          vscode.window.showInformationMessage('No selection found to fold.');
+        }
       }
     })
   );
