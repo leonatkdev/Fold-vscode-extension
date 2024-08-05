@@ -56,8 +56,8 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
       // Basic Fold and Unfold Commands
       this.createCommandItem('Fold Functions', 'Fold all functions in the current file.', 'autofold.foldFunctions', 'functions.svg'),
       this.createCommandItem('Fold File', 'Fold all sections in the current file.', 'autofold.foldFile', 'file.svg'),
-      this.createCommandItem('Fold File and Folders', 'Fold all foldable regions and folders.', 'autofold.foldAll', 'folder.svg'),
-      this.createCommandItem('Unfold File', 'Unfold all regions in the current file. .', 'autofold.unfoldFile', 'unfold.svg'),
+      this.createCommandItem('Fold File and Folders', 'Fold all foldable regions and folders.', 'autofold.foldFileAndFolder', 'folder.svg'),
+      this.createCommandItem('Unfold File', 'Unfold all regions in the current file.', 'autofold.unfoldFile', 'unfold.svg'),
 
       new CommandTreeItem('---------------------------', '', '', undefined),
 
@@ -79,8 +79,8 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
 
   private getKeybindingItemsBonus(): CommandTreeItem[] {
     return [
-      this.createCommandItem('Single Quote', 'Format to Single Quote', 'autofold.singleQoute',  "noDouble.svg"),
-      this.createCommandItem('Double Quote', 'Format to Double Quote', 'autofold.DoubleQoute',  "doubleQoute.svg"),
+      this.createCommandItem('Single Quote', 'Format to Single Quote', 'autofold.singleQoute', "noDouble.svg"),
+      this.createCommandItem('Double Quote', 'Format to Double Quote', 'autofold.DoubleQoute', "doubleQoute.svg"),
     ];
   }
 
@@ -92,11 +92,10 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
   private getKeybindingItems(): CommandTreeItem[] {
     return [
       this.createKeybindingItem('autofold.foldFile', 'Fold File', 'Default Shortcut: Ctrl+Alt+F', ""),
-      this.createKeybindingItem('autofold.foldAll', 'Fold Everything', 'Default Shortcut: Ctrl+Alt+A', ""),
+      this.createKeybindingItem('autofold.foldFileAndFolder', 'Fold Everything', 'Default Shortcut: Ctrl+Alt+A', ""),
       this.createKeybindingItem('autofold.unfoldFile', 'Unfold Everything', 'Default Shortcut: Ctrl+Alt+U', "")
     ];
   }
-
 
   private createKeybindingItem(commandId: string, label: string, defaultShortcut: string, iconName: string): CommandTreeItem {
     const keybinding = this.getKeybindingForCommand(commandId) || defaultShortcut;
@@ -166,7 +165,7 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.foldAll', () => {
+    vscode.commands.registerCommand('autofold.foldFileAndFolder', () => {
       vscode.window.showInformationMessage('Folding all foldable regions and folders.');
       vscode.commands.executeCommand('editor.foldAll');
       vscode.commands.executeCommand('workbench.files.action.collapseExplorerFolders');
