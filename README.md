@@ -6,8 +6,11 @@
 
 A Visual Studio Code extension to efficiently manage folding and more.
 
-![My Image](resources/readme/PanelFunctions.png "Side Panel Functions")
-![My Image](resources/readme/RightClickFunctions.png "Right Click Functions")
+### Side Panel Functions
+![Side Panel Functions](resources/readme/PanelFunctions.png "Side Panel Functions")
+
+### Right Click Functions
+![Right Click Functions](resources/readme/RightClickFunctions.png "Right Click Functions")
 
 ## Features
 
