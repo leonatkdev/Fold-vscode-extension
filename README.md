@@ -6,12 +6,6 @@
 
 A Visual Studio Code extension to efficiently manage folding and more.
 
-### Side Panel Functions
-![Side Panel Functions](resources/readme/PanelFunctions.png "Side Panel Functions")
-
-### Right Click Functions
-![Right Click Functions](resources/readme/RightClickFunctions.png "Right Click Functions")
-
 ## Features
 
 - **Fold Functions**: Fold all function blocks in the current file.
@@ -21,6 +15,13 @@ A Visual Studio Code extension to efficiently manage folding and more.
 - **Fold All Except Selected**: Fold all sections except the currently selected one.
 - **Unfold All Except Selected**: Unfold all sections except the currently selected one.
 - **Fold Level 1-5**: Fold to specified levels, typically used for different levels of code nesting.
+
+### Side Panel Functions
+![Side Panel Functions](resources/readme/PanelFunctions.png "Side Panel Functions")
+
+### Right Click Functions
+![Right Click Functions](resources/readme/RightClickFunctions.png "Right Click Functions")
+
 
 ## Installation
 
