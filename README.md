@@ -1,10 +1,13 @@
 # AutoFold
 
-[![Version](https://img.shields.io/visual-studio-marketplace/v/your-publisher.your-extension)](https://marketplace.visualstudio.com/items?itemName=your-publisher.your-extension)
-[![Installs](https://img.shields.io/visual-studio-marketplace/i/your-publisher.your-extension)](https://marketplace.visualstudio.com/items?itemName=your-publisher.your-extension)
-[![Rating](https://img.shields.io/visual-studio-marketplace/r/your-publisher.your-extension)](https://marketplace.visualstudio.com/items?itemName=your-publisher.your-extension)
+[![Version](https://img.shields.io/visual-studio-marketplace/v/LeonatKrasniqi.foldvscode)](https://marketplace.visualstudio.com/items?itemName=LeonatKrasniqi.foldvscode)
+[![Installs](https://img.shields.io/visual-studio-marketplace/i/LeonatKrasniqi.foldvscode)](https://marketplace.visualstudio.com/items?itemName=LeonatKrasniqi.foldvscode)
+[![Rating](https://img.shields.io/visual-studio-marketplace/r/LeonatKrasniqi.foldvscode)](https://marketplace.visualstudio.com/items?itemName=LeonatKrasniqi.foldvscode)
 
 A Visual Studio Code extension to efficiently manage folding and more.
+
+![My Image](resources/readme/PanelFunctions.png "Side Panel Functions")
+![My Image](resources/readme/RightClickFunctions.png "Right Click Functions")
 
 ## Features
 
@@ -20,13 +23,13 @@ A Visual Studio Code extension to efficiently manage folding and more.
 
 1. Open Visual Studio Code.
 2. Go to the Extensions view by clicking on the Extensions icon in the Activity Bar on the side of the window.
-3. Search for `AutoFold`.
+3. Search for `Fold VSCode`.
 4. Click the Install button.
 
 Or install via the command line:
 
 ```sh
-code --install-extension your-publisher.your-extension
+code --install-extension LeonatKrasniqi.foldvscode
 ```
 
 ### Default Keybindings
