@@ -65,11 +65,11 @@
         "title": "Unfold File"
       },
       {
-        "command": "autofold.foldAllExceptSelected",
+        "command": "autofold.foldAllExceptSelectedFunc",
         "title": "Fold All Except Selected"
       },
       {
-        "command": "autofold.unfoldAllExceptSelected",
+        "command": "autofold.unfoldAllExceptSelectedFunc",
         "title": "Unfold All Except Selected"
       },
       {
@@ -115,12 +115,12 @@
         "when": "editorTextFocus"
       },
       {
-        "command": "autofold.foldAllExceptSelected",
+        "command": "autofold.foldAllExceptSelectedFunc",
         "key": "ctrl+alt+e",
         "when": "editorTextFocus"
       },
       {
-        "command": "autofold.unfoldAllExceptSelected",
+        "command": "autofold.unfoldAllExceptSelectedFunc",
         "key": "ctrl+alt+shift+e",
         "when": "editorTextFocus"
       },
@@ -165,11 +165,11 @@
           "when": "editorTextFocus"
         },
         {
-          "command": "autofold.foldAllExceptSelected",
+          "command": "autofold.foldAllExceptSelectedFunc",
           "when": "editorHasSelection"
         },
         {
-          "command": "autofold.unfoldAllExceptSelected",
+          "command": "autofold.unfoldAllExceptSelectedFunc",
           "when": "editorHasSelection"
         }
       ]

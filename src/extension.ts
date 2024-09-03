@@ -62,8 +62,8 @@ class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem
       new CommandTreeItem('---------------------------', '', '', undefined),
 
       // Selective Fold/Unfold Commands
-      this.createCommandItem('Fold All Except Selected', 'Fold all sections except the selected one.', 'autofold.foldAllExceptSelected', 'selected.svg'),
-      this.createCommandItem('Unfold All Except Selected', 'Unfold all sections except the selected one.', 'autofold.unfoldAllExceptSelected', 'selected.svg'),
+      this.createCommandItem('Fold All Except Selected', 'Fold all sections except the selected one.', 'autofold.foldAllExceptSelectedFunc', 'selected.svg'),
+      this.createCommandItem('Unfold All Except Selected', 'Unfold all sections except the selected one.', 'autofold.unfoldAllExceptSelectedFunc', 'selected.svg'),
 
       new CommandTreeItem('---------------------------', '', '', undefined),
 
@@ -181,56 +181,17 @@ export function activate(context: vscode.ExtensionContext) {
   );
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.foldAllExceptSelected', async () => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        const selectedRange = editor.selection;
-
-        // Fold all regions first
-        await vscode.commands.executeCommand('editor.foldAll');
-
-        // Now unfold the regions within the selected range
-        const startLine = selectedRange.start.line;
-        const endLine = selectedRange.end.line;
-
-        // Unfold from the start line to the end line
-        for (let lineNumber = startLine; lineNumber <= endLine; lineNumber++) {
-          await vscode.commands.executeCommand('editor.unfold', { selectionLines: [lineNumber] });
-        }
-      }
+    vscode.commands.registerCommand('autofold.foldAllExceptSelectedFunc', async () => {
+      await vscode.commands.executeCommand('editor.foldAllExcept');
     })
   );
-
+  
   context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.unfoldAllExceptSelected', async () => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        const selectedRange = editor.selection;
-
-        // Unfold all regions first
-        await vscode.commands.executeCommand('editor.unfoldFile');
-
-        // Now fold all regions except the ones within the selected range
-        const startLine = selectedRange.start.line;
-        const endLine = selectedRange.end.line;
-        const totalLines = editor.document.lineCount;
-
-        // Fold lines before the selected range
-        if (startLine > 0) {
-          for (let lineNumber = 0; lineNumber < startLine; lineNumber++) {
-            await vscode.commands.executeCommand('editor.fold', { selectionLines: [lineNumber] });
-          }
-        }
-
-        // Fold lines after the selected range
-        if (endLine < totalLines - 1) {
-          for (let lineNumber = endLine + 1; lineNumber < totalLines; lineNumber++) {
-            await vscode.commands.executeCommand('editor.fold', { selectionLines: [lineNumber] });
-          }
-        }
-      }
+    vscode.commands.registerCommand('autofold.unfoldAllExceptSelectedFunc', async () => {
+      await vscode.commands.executeCommand('editor.unfoldAllExcept');
     })
   );
+  
 
   const foldLevels = [1, 2, 3, 4, 5];
   foldLevels.forEach(level => {
