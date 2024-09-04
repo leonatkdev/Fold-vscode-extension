@@ -1,144 +1,332 @@
-import * as vscode from 'vscode';
-import * as path from 'path';
+import * as vscode from "vscode";
+import * as path from "path";
 
-class CommandTreeItem extends vscode.TreeItem {
-  constructor(
-    public readonly label: string,
-    public readonly description: string,
-    public readonly commandId: string,
-    public readonly iconPath?: vscode.Uri,
-    public readonly collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None,
-    public readonly isKeybindingItem: boolean = false
-  ) {
-    super(label, collapsibleState);
-    this.command = commandId ? { command: 'autofold.handleCommand', title: label, arguments: [commandId, isKeybindingItem] } : undefined;
-    this.description = description;
-    this.iconPath = iconPath;
+// Helper to create CommandTreeItem
+const createCommandTreeItem = (
+  label: string,
+  description: string,
+  commandId: string,
+  iconName: string,
+  collapsibleState: vscode.TreeItemCollapsibleState = vscode
+    .TreeItemCollapsibleState.None,
+  isKeybindingItem: boolean = false
+): vscode.TreeItem => {
+  const iconPath = vscode.Uri.file(
+    path.join(__filename, "..", "..", "resources", "light", iconName)
+  );
+  const item = new vscode.TreeItem(label, collapsibleState);
+  item.description = description;
+  item.iconPath = iconPath;
+  if (commandId) {
+    item.command = {
+      command: "autofold.handleCommand",
+      title: label,
+      arguments: [commandId, isKeybindingItem],
+    };
   }
-}
+  return item;
+};
 
-class CommandTreeDataProvider implements vscode.TreeDataProvider<CommandTreeItem> {
-  private _onDidChangeTreeData: vscode.EventEmitter<CommandTreeItem | undefined | void> = new vscode.EventEmitter<CommandTreeItem | undefined | void>();
-  readonly onDidChangeTreeData: vscode.Event<CommandTreeItem | undefined | void> = this._onDidChangeTreeData.event;
+// Data Provider
+const createTreeDataProvider = () => {
+  const onDidChangeTreeData = new vscode.EventEmitter<void>();
 
-  refresh(): void {
-    this._onDidChangeTreeData.fire();
-  }
+  const refresh = () => onDidChangeTreeData.fire();
 
-  getTreeItem(element: CommandTreeItem): vscode.TreeItem {
-    return element;
-  }
+  const getTreeItem = (element: vscode.TreeItem) => element;
 
-  getChildren(element?: CommandTreeItem): CommandTreeItem[] | Thenable<CommandTreeItem[]> {
+  const getChildren = (element?: vscode.TreeItem) => {
     if (!element) {
-      return this.getRootItems();
-    } else if (element.label === 'Keybindings') {
-      return this.getKeybindingItems();
-    } else if (element.label === 'Bonus') {
-      return this.getKeybindingItemsBonus();
+      return getRootItems();
+    } else if (element.label === "Lorem Ipsum Generator Paragraf") {
+      return getKeybindingItemsLoremIpsumParagraf();
+    } else if (element.label === "Lorem Ipsum Generator Word") {
+      return getKeybindingItemsLoremIpsumWord();
+    } else if (element.label === "Bonus") {
+      return getKeybindingItemsBonus();
     }
     return [];
-  }
+  };
 
-  private getRootItems(): CommandTreeItem[] {
-    return [
-      new CommandTreeItem('Commands and Descriptions', '', '', undefined, vscode.TreeItemCollapsibleState.None),
-      ...this.getCommandDescriptionItems(),
-      new CommandTreeItem('Keybindings', '', '', undefined, vscode.TreeItemCollapsibleState.Expanded),
-      new CommandTreeItem('Bonus', '', '', undefined, vscode.TreeItemCollapsibleState.Expanded)
-    ];
-  }
+  return {
+    onDidChangeTreeData: onDidChangeTreeData.event,
+    refresh,
+    getTreeItem,
+    getChildren,
+  };
+};
 
-  private getCommandDescriptionItems(): CommandTreeItem[] {
-    return [
-      new CommandTreeItem('---------------------------', '', '', undefined),
+// Root items for the tree
+const getRootItems = () => [
+  ...getCommandDescriptionItems(),
+  createCommandTreeItem(
+    "Lorem Ipsum Generator Paragraf",
+    "",
+    "",
+    "",
+    vscode.TreeItemCollapsibleState.Expanded
+  ),
+  createCommandTreeItem(
+    "Lorem Ipsum Generator Word",
+    "",
+    "",
+    "",
+    vscode.TreeItemCollapsibleState.Expanded
+  ),
+  createCommandTreeItem(
+    "Bonus",
+    "",
+    "",
+    "",
+    vscode.TreeItemCollapsibleState.Expanded
+  ),
+];
 
-      // Basic Fold and Unfold Commands
-      this.createCommandItem('Fold Functions', 'Fold all functions in the current file.', 'autofold.foldFunctions', 'functions.svg'),
-      this.createCommandItem('Fold File', 'Fold all sections in the current file.', 'autofold.foldFile', 'file.svg'),
-      this.createCommandItem('Fold File and Folders', 'Fold all foldable regions and folders.', 'autofold.foldFileAndFolder', 'folder.svg'),
-      this.createCommandItem('Unfold File', 'Unfold all regions in the current file.', 'autofold.unfoldFile', 'unfold.svg'),
+// Command items
+const getCommandDescriptionItems = () => [
+  createCommandTreeItem(
+    "Fold Functions",
+    "Fold all functions in the current file.",
+    "autofold.foldFunctions",
+    "functions.svg"
+  ),
+  createCommandTreeItem(
+    "Fold File",
+    "Fold all sections in the current file.",
+    "autofold.foldFile",
+    "file.svg"
+  ),
+  createCommandTreeItem(
+    "Fold Folders",
+    "Fold all foldable regions and folders.",
+    "autofold.foldFolder",
+    "folder.svg"
+  ),
+  createCommandTreeItem(
+    "Unfold File",
+    "Unfold all regions in the current file.",
+    "autofold.unfoldFile",
+    "unfold.svg"
+  ),
+  createCommandTreeItem("---------------------------", "", "", ""),
 
-      new CommandTreeItem('---------------------------', '', '', undefined),
+  // Selective Fold/Unfold Commands
+  createCommandTreeItem(
+    "Fold All Except Selected",
+    "Fold all sections except the selected one.",
+    "autofold.foldAllExceptSelectedFunc",
+    "selected.svg"
+  ),
+  createCommandTreeItem(
+    "Unfold All Except Selected",
+    "Unfold all sections except the selected one.",
+    "autofold.unfoldAllExceptSelectedFunc",
+    "selected.svg"
+  ),
 
-      // Selective Fold/Unfold Commands
-      this.createCommandItem('Fold All Except Selected', 'Fold all sections except the selected one.', 'autofold.foldAllExceptSelectedFunc', 'selected.svg'),
-      this.createCommandItem('Unfold All Except Selected', 'Unfold all sections except the selected one.', 'autofold.unfoldAllExceptSelectedFunc', 'selected.svg'),
+  createCommandTreeItem("---------------------------", "", "", ""),
 
-      new CommandTreeItem('---------------------------', '', '', undefined),
+  // Specific Level Folding Commands
+  createCommandTreeItem(
+    "Fold Level 1",
+    "Fold to level 1, typically collapsing the most outer structures like classes or namespaces.",
+    "autofold.foldLevel1",
+    "numberOne.svg"
+  ),
+  createCommandTreeItem(
+    "Fold Level 2",
+    "Fold to level 2, usually collapsing function definitions or inner classes.",
+    "autofold.foldLevel2",
+    "numberTwo.svg"
+  ),
+  createCommandTreeItem(
+    "Fold Level 3",
+    "Fold to level 3, collapsing detailed blocks like loops or conditionals.",
+    "autofold.foldLevel3",
+    "numberThree.svg"
+  ),
+  createCommandTreeItem(
+    "Fold Level 4",
+    "Fold to level 4, collapsing finer structures like nested blocks within functions.",
+    "autofold.foldLevel4",
+    "numberFour.svg"
+  ),
+  createCommandTreeItem(
+    "Fold Level 5",
+    "Fold to level 5, collapsing the smallest detail levels, such as inline comments or small code blocks.",
+    "autofold.foldLevel5",
+    "numberFive.svg"
+  ),
+  // createCommandTreeItem('---------------------------', '', ''),
+];
 
-      // Specific Level Folding Commands
-      this.createCommandItem('Fold Level 1', 'Fold to level 1, typically collapsing the most outer structures like classes or namespaces.', 'autofold.foldLevel1', 'numberOne.svg'),
-      this.createCommandItem('Fold Level 2', 'Fold to level 2, usually collapsing function definitions or inner classes.', 'autofold.foldLevel2', 'numberTwo.svg'),
-      this.createCommandItem('Fold Level 3', 'Fold to level 3, collapsing detailed blocks like loops or conditionals.', 'autofold.foldLevel3', 'numberThree.svg'),
-      this.createCommandItem('Fold Level 4', 'Fold to level 4, collapsing finer structures like nested blocks within functions.', 'autofold.foldLevel4', 'numberFour.svg'),
-      this.createCommandItem('Fold Level 5', 'Fold to level 5, collapsing the smallest detail levels, such as inline comments or small code blocks.', 'autofold.foldLevel5', 'numberFive.svg'),
-      new CommandTreeItem('---------------------------', '', '', undefined),
-    ];
-  }
+// Lorem Ipsum paragraph items
+const getKeybindingItemsLoremIpsumParagraf = () => [
+  createCommandTreeItem(
+    "Lorem-p-1",
+    "Generate 1 Paragraph of Lorem Ipsum",
+    "autofold.loremIpsumParagraph1",
+    "paragraf.svg"
+  ),
+  createCommandTreeItem(
+    "Lorem-p-2",
+    "Generate 2 Paragraphs of Lorem Ipsum",
+    "autofold.loremIpsumParagraph2",
+    "paragraf.svg"
+  ),
+  createCommandTreeItem(
+    "Lorem-p-3",
+    "Generate 3 Paragraphs of Lorem Ipsum",
+    "autofold.loremIpsumParagraph3",
+    "paragraf.svg"
+  ),
+];
 
-  private getKeybindingItemsBonus(): CommandTreeItem[] {
-    return [
-      this.createCommandItem('Single Quote', 'Format to Single Quote', 'autofold.singleQoute', "noDouble.svg"),
-      this.createCommandItem('Double Quote', 'Format to Double Quote', 'autofold.DoubleQoute', "doubleQoute.svg"),
-    ];
-  }
+// Lorem Ipsum word items
+const getKeybindingItemsLoremIpsumWord = () => [
+  createCommandTreeItem(
+    "Lorem-w-1",
+    "Generate 10 Words of Lorem Ipsum",
+    "autofold.loremIpsumWord10",
+    "word.svg"
+  ),
+  createCommandTreeItem(
+    "Lorem-w-2",
+    "Generate 20 Words of Lorem Ipsum",
+    "autofold.loremIpsumWord20",
+    "word.svg"
+  ),
+  createCommandTreeItem(
+    "Lorem-w-3",
+    "Generate 30 Words of Lorem Ipsum",
+    "autofold.loremIpsumWord30",
+    "word.svg"
+  ),
+];
 
-  private createCommandItem(label: string, description: string, commandId: string, iconName: string): CommandTreeItem {
-    const iconPath = vscode.Uri.file(path.join(__filename, '..', '..', 'resources', 'light', iconName));
-    return new CommandTreeItem(label, description, commandId, iconPath);
-  }
+// Bonus command items
+const getKeybindingItemsBonus = () => [
+  createCommandTreeItem(
+    "Single Quote",
+    "Format to Single Quote",
+    "autofold.singleQuote",
+    "noDouble.svg"
+  ),
+  createCommandTreeItem(
+    "Double Quote",
+    "Format to Double Quote",
+    "autofold.doubleQuote",
+    "doubleQoute.svg"
+  ),
+];
 
-  private getKeybindingItems(): CommandTreeItem[] {
-    return [
-      this.createKeybindingItem('autofold.foldFile', 'Fold File', 'Default Shortcut: Ctrl+Alt+F', ""),
-      this.createKeybindingItem('autofold.foldFileAndFolder', 'Fold Everything', 'Default Shortcut: Ctrl+Alt+A', ""),
-      this.createKeybindingItem('autofold.unfoldFile', 'Unfold Everything', 'Default Shortcut: Ctrl+Alt+U', "")
-    ];
-  }
-
-  private createKeybindingItem(commandId: string, label: string, defaultShortcut: string, iconName: string): CommandTreeItem {
-    const keybinding = this.getKeybindingForCommand(commandId) || defaultShortcut;
-    const iconPath = vscode.Uri.file(path.join(__filename, '..', '..', 'resources', 'light', iconName));
-
-    return new CommandTreeItem(label, `${keybinding}`, commandId, iconPath, vscode.TreeItemCollapsibleState.None, true);
-  }
-
-  private getKeybindingForCommand(commandId: string): string | undefined {
-    const keybindings = vscode.workspace.getConfiguration('keybindings');
-    const keybinding = keybindings.inspect(`[${commandId}]`);
-    return keybinding?.globalValue?.toString();
-  }
-}
-
-function replaceQuotes(document: vscode.TextDocument, editor: vscode.TextEditor, targetQuote: '"' | "'"): Thenable<boolean> {
+const replaceQuotes = (
+  document: vscode.TextDocument,
+  editor: vscode.TextEditor,
+  targetQuote: '"' | "'"
+) => {
   const singleQuoteRegex = /'/g;
   const doubleQuoteRegex = /"/g;
 
   const edit = new vscode.WorkspaceEdit();
-  for (let i = 0; i < document.lineCount; i++) {
-    const line = document.lineAt(i);
-    const newText = targetQuote === '"' ? line.text.replace(singleQuoteRegex, '"') : line.text.replace(doubleQuoteRegex, "'");
-    edit.replace(document.uri, line.range, newText);
+
+  try {
+    for (let i = 0; i < document.lineCount; i++) {
+      const line = document.lineAt(i);
+      const newText =
+        targetQuote === '"'
+          ? line.text.replace(singleQuoteRegex, '"')
+          : line.text.replace(doubleQuoteRegex, "'");
+      
+      // Test if the new text would throw an error (optional)
+      // Here you can implement a validation step if needed
+
+      edit.replace(document.uri, line.range, newText);
+    }
+
+    // Apply the changes
+    return vscode.workspace.applyEdit(edit);
+  } catch (error) {
+    vscode.window.showErrorMessage(`Error replacing quotes: ${error.message}`);
+    // Return a rejection or false indicating the edit failed
+    return Promise.resolve(false);
   }
-  return vscode.workspace.applyEdit(edit);
-}
+};
 
+
+
+// Activate function for extension
 export function activate(context: vscode.ExtensionContext) {
+  const treeDataProvider = createTreeDataProvider();
+  vscode.window.registerTreeDataProvider("foldView", treeDataProvider);
 
-  const treeDataProvider = new CommandTreeDataProvider();
-  vscode.window.registerTreeDataProvider('foldView', treeDataProvider);
+  const commands = [
+    {
+      id: "autofold.foldFile",
+      handler: () => vscode.commands.executeCommand("editor.foldAll"),
+    },
+    {
+      id: "autofold.foldFolder",
+      handler: () =>
+        vscode.commands.executeCommand(
+          "workbench.files.action.collapseExplorerFolders"
+        ),
+    },
+    {
+      id: "autofold.unfoldFile",
+      handler: () => vscode.commands.executeCommand("editor.unfoldAll"),
+    },
+    {
+      id: "autofold.foldAllExceptSelectedFunc",
+      handler: () => vscode.commands.executeCommand("editor.foldAllExcept"),
+    },
+    {
+      id: "autofold.unfoldAllExceptSelectedFunc",
+      handler: () => vscode.commands.executeCommand("editor.unfoldAllExcept"),
+    },
+    {
+      id: "autofold.foldLevel1",
+      handler: () => vscode.commands.executeCommand("editor.foldLevel1"),
+    },
+    {
+      id: "autofold.foldLevel2",
+      handler: () => vscode.commands.executeCommand("editor.foldLevel2"),
+    },
+    {
+      id: "autofold.foldLevel3",
+      handler: () => vscode.commands.executeCommand("editor.foldLevel3"),
+    },
+    {
+      id: "autofold.foldLevel4",
+      handler: () => vscode.commands.executeCommand("editor.foldLevel4"),
+    },
+    {
+      id: "autofold.foldLevel5",
+      handler: () => vscode.commands.executeCommand("editor.foldLevel5"),
+    },
+    {
+      id: "autofold.singleQuote",
+      handler: () =>
+        replaceQuotes(
+          vscode.window.activeTextEditor?.document!,
+          vscode.window.activeTextEditor!,
+          "'"
+        ),
+    },
+    {
+      id: "autofold.doubleQuote",
+      handler: () =>
+        replaceQuotes(
+          vscode.window.activeTextEditor?.document!,
+          vscode.window.activeTextEditor!,
+          '"'
+        ),
+    },
+  ];
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.handleCommand', (commandId: string, isKeybindingItem: boolean) => {
-      if (isKeybindingItem) {
-        vscode.window.showInformationMessage(`To change the keybinding for "${commandId}", please search for it in the Keybindings settings.`);
-        vscode.commands.executeCommand('workbench.action.openGlobalKeybindings');
-      } else {
-        vscode.commands.executeCommand(commandId);
-      }
-    })
-  );
+  commands.forEach(({ id, handler }) => {
+    context.subscriptions.push(vscode.commands.registerCommand(id, handler));
+  });
 
   context.subscriptions.push(
     vscode.commands.registerCommand('autofold.foldFunctions', () => {
@@ -157,95 +345,169 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.foldFile', () => {
-      vscode.window.showInformationMessage('Folding all sections in the file.');
-      vscode.commands.executeCommand('editor.foldAll');
-    })
-  );
+  const sentences = [
+    "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+    "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+    "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.",
+    "Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    "Praesent commodo cursus magna, vel scelerisque nisl consectetur et.",
+    "Vestibulum id ligula porta felis euismod semper.",
+    "Curabitur blandit tempus porttitor.",
+    "Cras mattis consectetur purus sit amet fermentum.",
+    "Aenean lacinia bibendum nulla sed consectetur.",
+    "Nulla vitae elit libero, a pharetra augue.",
+    "Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
+    "Donec ullamcorper nulla non metus auctor fringilla.",
+    "Morbi leo risus, porta ac consectetur ac, vestibulum at eros.",
+    "Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum.",
+    "Sed posuere consectetur est at lobortis.",
+    "Cras justo odio, dapibus ac facilisis in, egestas eget quam.",
+    "Maecenas faucibus mollis interdum.",
+    "Vivamus sagittis lacus vel augue laoreet rutrum faucibus dolor auctor.",
+    "Etiam porta sem malesuada magna mollis euismod.",
+    "Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.",
+    "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium.",
+    "Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.",
+    "Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit.",
+    "Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.",
+    "At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditiis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident.",
+    "Similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga.",
+    "Et harum quidem rerum facilis est et expedita distinctio.",
+    "Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus id quod maxime placeat facere possimus.",
+    "Omnis voluptas assumenda est, omnis dolor repellendus.",
+    "Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae.",
+    "Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat.",
+  ];
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.foldFileAndFolder', () => {
-      vscode.window.showInformationMessage('Folding all foldable regions and folders.');
-      vscode.commands.executeCommand('editor.foldAll');
-      vscode.commands.executeCommand('workbench.files.action.collapseExplorerFolders');
-    })
-  );
+  function getRandomSentence() {
+    return sentences[Math.floor(Math.random() * sentences.length)];
+  }
 
-  context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.unfoldFile', () => {
-      vscode.window.showInformationMessage('Unfolding all regions and folders.');
-      vscode.commands.executeCommand('editor.unfoldAll');
-      vscode.commands.executeCommand('workbench.files.action.expandExplorerFolders');
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.foldAllExceptSelectedFunc', async () => {
-      await vscode.commands.executeCommand('editor.foldAllExcept');
-    })
-  );
-  
-  context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.unfoldAllExceptSelectedFunc', async () => {
-      await vscode.commands.executeCommand('editor.unfoldAllExcept');
-    })
-  );
-  
-
-  const foldLevels = [1, 2, 3, 4, 5];
-  foldLevels.forEach(level => {
-    context.subscriptions.push(
-      vscode.commands.registerCommand(`autofold.foldLevel${level}`, () => {
-        vscode.window.showInformationMessage(`Folding to level ${level}.`);
-        vscode.commands.executeCommand(`editor.foldLevel${level}`);
-      })
-    );
-  });
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.singleQoute', () => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        replaceQuotes(editor.document, editor, "'").then(() => {
-          vscode.window.showInformationMessage('Formatted to single quotes.');
-        });
+  function generateParagraphs(amount: number): string {
+    let paragraphs = [
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+    ];
+    for (let i = 1; i < amount; i++) {
+      let paragraph = [];
+      for (let j = 0; j < 5; j++) {
+        // Adjust number of sentences per paragraph
+        paragraph.push(getRandomSentence());
       }
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.DoubleQoute', () => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        replaceQuotes(editor.document, editor, '"').then(() => {
-          vscode.window.showInformationMessage('Formatted to double quotes.');
-        });
-      }
-    })
-  );
-
-  context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.foldSelection', () => {
-      const editor = vscode.window.activeTextEditor;
-      if (editor) {
-        const { selection } = editor;
-        if (!selection.isEmpty) {
-          vscode.commands.executeCommand('editor.fold', { selectionLines: [selection.start.line, selection.end.line] });
-        } else {
-          vscode.window.showInformationMessage('No selection found to fold.');
-        }
-      }
-    })
-  );
-
-  // Listen for configuration changes
-  vscode.workspace.onDidChangeConfiguration(event => {
-    if (event.affectsConfiguration('keybindings')) {
-      // Handle keybinding changes
-      treeDataProvider.refresh();
+      paragraphs.push(paragraph.join(" "));
     }
+    return paragraphs.join(" "); // Join paragraphs with a space
+  }
+
+  function generateWords(amount: number) {
+    let words =
+      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.".split(
+        " "
+      );
+    while (words.length < amount) {
+      words = words.concat(getRandomSentence().split(" "));
+    }
+    return words.slice(0, amount).join(" ");
+  }
+  function generateLoremIpsum(type: String, amount: number) {
+    switch (type) {
+      case "paragraphs":
+        return generateParagraphs(amount);
+      case "words":
+        return generateWords(amount);
+      default:
+        return "";
+    }
+  }
+
+  function insertLoremIpsum(type: "paragraphs" | "words", amount: number) {
+    const loremIpsum = generateLoremIpsum(type, amount);
+    insertTextAtCursor(loremIpsum);
+  }
+
+  function insertTextAtCursor(text: string) {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+      const position = editor.selection.active;
+      editor.edit((editBuilder) => {
+        editBuilder.insert(position, text);
+      });
+    }
+  }
+
+  vscode.commands.registerCommand("autofold.loremIpsumParagraph1", () => {
+    insertLoremIpsum("paragraphs", 1);
   });
+  vscode.commands.registerCommand("autofold.loremIpsumParagraph2", () => {
+    insertLoremIpsum("paragraphs", 2);
+  });
+  vscode.commands.registerCommand("autofold.loremIpsumParagraph3", () => {
+    insertLoremIpsum("paragraphs", 3);
+  });
+  vscode.commands.registerCommand("autofold.loremIpsumParagraph4", () => {
+    insertLoremIpsum("paragraphs", 4);
+  });
+  vscode.commands.registerCommand("autofold.loremIpsumParagraph5", () => {
+    insertLoremIpsum("paragraphs", 5);
+  });
+
+  vscode.commands.registerCommand("autofold.loremIpsumWord10", () => {
+    insertLoremIpsum("words", 10);
+  });
+  vscode.commands.registerCommand("autofold.loremIpsumWord20", () => {
+    insertLoremIpsum("words", 20);
+  });
+  vscode.commands.registerCommand("autofold.loremIpsumWord30", () => {
+    insertLoremIpsum("words", 30);
+  });
+  vscode.commands.registerCommand("autofold.loremIpsumWord40", () => {
+    insertLoremIpsum("words", 40);
+  });
+  vscode.commands.registerCommand("autofold.loremIpsumWord50", () => {
+    insertLoremIpsum("words", 50);
+  });
+
+  
+
+  vscode.languages.registerCompletionItemProvider(
+    { scheme: 'file', language: '*' }, // Applies to all file types
+    {
+      provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+        const completionItems: vscode.CompletionItem[] = [];
+  
+        // Suggest lorem-p-<number> for paragraphs
+        for (let i = 1; i <= 5; i++) {
+          const item = new vscode.CompletionItem(`lorem-p-${i}`, vscode.CompletionItemKind.Snippet);
+          item.detail = `Generate ${i} paragraph(s) of Lorem Ipsum`;
+          item.insertText = `lorem-p-${i}`;
+          item.command = { command: 'autofold.loremIpsumParagraph' + i, title: `Insert ${i} Paragraphs` };
+          completionItems.push(item);
+        }
+  
+        // Suggest lorem-w-<number> for words
+        const wordCounts = [10, 20, 30, 40, 50];
+        wordCounts.forEach((count, index) => {
+          const item = new vscode.CompletionItem(`lorem-w-${index + 1}`, vscode.CompletionItemKind.Snippet);
+          item.detail = `Generate ${count} words of Lorem Ipsum`;
+          item.insertText = `lorem-w-${index + 1}`;
+          item.command = { command: 'autofold.loremIpsumWord' + count, title: `Insert ${count} Words` };
+          completionItems.push(item);
+        });
+  
+        return completionItems;
+      },
+    },
+    '-', 'p', 'w' // Trigger the completion when "lorem-p-" or "lorem-w-" is typed
+  );
+  
+
+  context.subscriptions.push(
+    vscode.commands.registerCommand(
+      "autofold.handleCommand",
+      (commandId: string) => {
+        vscode.commands.executeCommand(commandId);
+      }
+    )
+  );
 }
 
 export function deactivate() {}

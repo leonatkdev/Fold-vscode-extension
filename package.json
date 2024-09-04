@@ -57,8 +57,8 @@
         "title": "Fold File"
       },
       {
-        "command": "autofold.foldFileAndFolder",
-        "title": "Fold File and Folders"
+        "command": "autofold.foldFolder",
+        "title": "Fold Folders"
       },
       {
         "command": "autofold.unfoldFile",
@@ -91,6 +91,10 @@
       {
         "command": "autofold.foldLevel5",
         "title": "Fold Level 5"
+      },
+      {
+        "command": "autofold.toggleCheckbox",
+        "title": "Toggle Checkbox"
       }
     ],
     "keybindings": [
@@ -105,7 +109,7 @@
         "when": "editorTextFocus"
       },
       {
-        "command": "autofold.foldFileAndFolder",
+        "command": "autofold.foldFolder",
         "key": "ctrl+alt+a",
         "when": "editorTextFocus"
       },
@@ -157,7 +161,7 @@
           "when": "editorTextFocus"
         },
         {
-          "command": "autofold.foldFileAndFolder",
+          "command": "autofold.foldFolder",
           "when": "editorTextFocus"
         },
         {
