@@ -157,7 +157,7 @@ const getCommandDescriptionItems = () => [
     "autofold.foldLevel5",
     "numberFive.svg"
   ),
-  // createCommandTreeItem('---------------------------', '', ''),
+  createCommandTreeItem("---------------------------", "", "", ""),
 ];
 
 // Lorem Ipsum paragraph items
@@ -237,7 +237,7 @@ const replaceQuotes = (
         targetQuote === '"'
           ? line.text.replace(singleQuoteRegex, '"')
           : line.text.replace(doubleQuoteRegex, "'");
-      
+
       // Test if the new text would throw an error (optional)
       // Here you can implement a validation step if needed
 
@@ -246,14 +246,12 @@ const replaceQuotes = (
 
     // Apply the changes
     return vscode.workspace.applyEdit(edit);
-  } catch (error) {
+  } catch (error: any) {
     vscode.window.showErrorMessage(`Error replacing quotes: ${error.message}`);
     // Return a rejection or false indicating the edit failed
     return Promise.resolve(false);
   }
 };
-
-
 
 // Activate function for extension
 export function activate(context: vscode.ExtensionContext) {
@@ -329,17 +327,18 @@ export function activate(context: vscode.ExtensionContext) {
   });
 
   context.subscriptions.push(
-    vscode.commands.registerCommand('autofold.foldFunctions', () => {
+    vscode.commands.registerCommand("autofold.foldFunctions", () => {
       const editor = vscode.window.activeTextEditor;
       if (editor) {
         const { document } = editor;
-        const functionRegex = /function\s+[a-zA-Z_$][0-9a-zA-Z_$]*\s*\(.*?\)\s*{/g;
+        const functionRegex =
+          /function\s+[a-zA-Z_$][0-9a-zA-Z_$]*\s*\(.*?\)\s*{/g;
         let match;
         while ((match = functionRegex.exec(document.getText())) !== null) {
           const start = document.positionAt(match.index);
           const end = new vscode.Position(start.line, start.character);
           editor.selection = new vscode.Selection(start, end);
-          vscode.commands.executeCommand('editor.fold');
+          vscode.commands.executeCommand("editor.fold");
         }
       }
     })
@@ -419,10 +418,37 @@ export function activate(context: vscode.ExtensionContext) {
     }
   }
 
-  function insertLoremIpsum(type: "paragraphs" | "words", amount: number) {
-    const loremIpsum = generateLoremIpsum(type, amount);
-    insertTextAtCursor(loremIpsum);
+  function insertLoremIpsum(type: 'paragraphs' | 'words', amount: number) {
+    const editor = vscode.window.activeTextEditor;
+    if (editor) {
+      const position = editor.selection.active;
+      const line = editor.document.lineAt(position.line);
+      const fullLineText = line.text;
+    
+      // Use a regex to match the entire "lorem-p-<number>" or "lorem-w-<number>"
+      const match = fullLineText.match(/lorem-[pw]-\d+/);
+      if (match) {
+        const commandStartIndex = match.index || 0; // Start index of the matched command
+        const commandEndIndex = commandStartIndex + match[0].length; // End index of the matched command
+        const range = new vscode.Range(
+          new vscode.Position(position.line, commandStartIndex),
+          new vscode.Position(position.line, commandEndIndex)
+        );
+    
+        const loremIpsum = generateLoremIpsum(type, amount);
+    
+        // Replace the command text with the generated Lorem Ipsum
+        editor.edit(editBuilder => {
+          // First, ensure the entire command is removed
+          editBuilder.replace(range, '');
+    
+          // Then, insert the generated Lorem Ipsum text at the correct position
+          editBuilder.insert(new vscode.Position(position.line, commandStartIndex), loremIpsum);
+        });
+      }
+    }
   }
+  
 
   function insertTextAtCursor(text: string) {
     const editor = vscode.window.activeTextEditor;
@@ -466,8 +492,6 @@ export function activate(context: vscode.ExtensionContext) {
     insertLoremIpsum("words", 50);
   });
 
-  
-
   vscode.languages.registerCompletionItemProvider(
     { scheme: 'file', language: '*' }, // Applies to all file types
     {
@@ -478,8 +502,16 @@ export function activate(context: vscode.ExtensionContext) {
         for (let i = 1; i <= 5; i++) {
           const item = new vscode.CompletionItem(`lorem-p-${i}`, vscode.CompletionItemKind.Snippet);
           item.detail = `Generate ${i} paragraph(s) of Lorem Ipsum`;
-          item.insertText = `lorem-p-${i}`;
-          item.command = { command: 'autofold.loremIpsumParagraph' + i, title: `Insert ${i} Paragraphs` };
+  
+          // Range to replace the "lorem-p-<number>" text
+          const range = document.getWordRangeAtPosition(position, /lorem-p-\d+/);
+          if (range) {
+            item.range = range;
+          }
+  
+          // Use the command to insert the generated text
+          item.command = { command: `autofold.loremIpsumParagraph${i}`, title: `Insert ${i} Paragraphs` };
+  
           completionItems.push(item);
         }
   
@@ -488,8 +520,16 @@ export function activate(context: vscode.ExtensionContext) {
         wordCounts.forEach((count, index) => {
           const item = new vscode.CompletionItem(`lorem-w-${index + 1}`, vscode.CompletionItemKind.Snippet);
           item.detail = `Generate ${count} words of Lorem Ipsum`;
-          item.insertText = `lorem-w-${index + 1}`;
-          item.command = { command: 'autofold.loremIpsumWord' + count, title: `Insert ${count} Words` };
+  
+          // Range to replace the "lorem-w-<number>" text
+          const range = document.getWordRangeAtPosition(position, /lorem-w-\d+/);
+          if (range) {
+            item.range = range;
+          }
+  
+          // Use the command to insert the generated text
+          item.command = { command: `autofold.loremIpsumWord${count}`, title: `Insert ${count} Words` };
+  
           completionItems.push(item);
         });
   
@@ -498,8 +538,6 @@ export function activate(context: vscode.ExtensionContext) {
     },
     '-', 'p', 'w' // Trigger the completion when "lorem-p-" or "lorem-w-" is typed
   );
-  
-
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "autofold.handleCommand",
