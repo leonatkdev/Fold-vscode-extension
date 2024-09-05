@@ -1,14 +1,12 @@
 import * as vscode from "vscode";
 import * as path from "path";
 
-// Helper to create CommandTreeItem
 const createCommandTreeItem = (
   label: string,
   description: string,
   commandId: string,
   iconName: string,
-  collapsibleState: vscode.TreeItemCollapsibleState = vscode
-    .TreeItemCollapsibleState.None,
+  collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None,
   isKeybindingItem: boolean = false
 ): vscode.TreeItem => {
   const iconPath = vscode.Uri.file(
@@ -19,9 +17,9 @@ const createCommandTreeItem = (
   item.iconPath = iconPath;
   if (commandId) {
     item.command = {
-      command: "autofold.handleCommand",
+      command: commandId, // Make sure this matches the command registered in `activate`
       title: label,
-      arguments: [commandId, isKeybindingItem],
+      arguments: [commandId, isKeybindingItem], // Passing arguments if needed
     };
   }
   return item;
@@ -45,6 +43,9 @@ const createTreeDataProvider = () => {
     } else if (element.label === "Bonus") {
       return getKeybindingItemsBonus();
     }
+    else if (element.label === "Fold Functionality") {
+      return getCommandDescriptionItems();
+    }
     return [];
   };
 
@@ -58,7 +59,14 @@ const createTreeDataProvider = () => {
 
 // Root items for the tree
 const getRootItems = () => [
-  ...getCommandDescriptionItems(),
+  // ...getCommandDescriptionItems(),
+  createCommandTreeItem(
+    "Fold Functionality",
+    "",
+    "",
+    "",
+    vscode.TreeItemCollapsibleState.Expanded
+  ),
   createCommandTreeItem(
     "Lorem Ipsum Generator Paragraf",
     "",
@@ -182,27 +190,28 @@ const getKeybindingItemsLoremIpsumParagraf = () => [
   ),
 ];
 
-// Lorem Ipsum word items
+// Lorem Ipsum word items for the sidebar
 const getKeybindingItemsLoremIpsumWord = () => [
   createCommandTreeItem(
     "Lorem-w-1",
     "Generate 10 Words of Lorem Ipsum",
-    "autofold.loremIpsumWord10",
+    "autofold.loremIpsumWord10", // Directly call the command that inserts 10 words
     "word.svg"
   ),
   createCommandTreeItem(
     "Lorem-w-2",
     "Generate 20 Words of Lorem Ipsum",
-    "autofold.loremIpsumWord20",
+    "autofold.loremIpsumWord20", // Directly call the command that inserts 20 words
     "word.svg"
   ),
   createCommandTreeItem(
     "Lorem-w-3",
     "Generate 30 Words of Lorem Ipsum",
-    "autofold.loremIpsumWord30",
+    "autofold.loremIpsumWord30", // Directly call the command that inserts 30 words
     "word.svg"
   ),
 ];
+
 
 // Bonus command items
 const getKeybindingItemsBonus = () => [
@@ -344,6 +353,7 @@ export function activate(context: vscode.ExtensionContext) {
     })
   );
 
+
   const sentences = [
     "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
@@ -418,47 +428,72 @@ export function activate(context: vscode.ExtensionContext) {
     }
   }
 
+  vscode.languages.registerCompletionItemProvider(
+    { scheme: 'file', language: '*' }, // Applies to all file types
+    {
+      provideCompletionItems(document: vscode.TextDocument, position: vscode.Position) {
+        const completionItems: vscode.CompletionItem[] = [];
+  
+        // Suggest lorem-p-<number> for paragraphs
+        for (let i = 1; i <= 5; i++) {
+          const item = new vscode.CompletionItem(`lorem-p-${i}`, vscode.CompletionItemKind.Snippet);
+          item.detail = `Generate ${i} paragraph(s) of Lorem Ipsum`;
+  
+          // Set the command to insert the generated text when the suggestion is selected
+          item.command = { command: `autofold.loremIpsumParagraph${i}`, title: `Insert ${i} Paragraphs` };
+  
+          completionItems.push(item);
+        }
+  
+        // Suggest lorem-w-<number> for words
+        const wordCounts = [10, 20, 30, 40, 50];
+        wordCounts.forEach((count, index) => {
+          const item = new vscode.CompletionItem(`lorem-w-${index + 1}`, vscode.CompletionItemKind.Snippet);
+          item.detail = `Generate ${count} words of Lorem Ipsum`;
+  
+          // Set the command to insert the generated text when the suggestion is selected
+          item.command = { command: `autofold.loremIpsumWord${count}`, title: `Insert ${count} Words` };
+  
+          completionItems.push(item);
+        });
+  
+        return completionItems;
+      },
+    },
+    '-', 'p', 'w' // Trigger the completion when "lorem-p-" or "lorem-w-" is typed
+  );
+  
   function insertLoremIpsum(type: 'paragraphs' | 'words', amount: number) {
     const editor = vscode.window.activeTextEditor;
     if (editor) {
       const position = editor.selection.active;
       const line = editor.document.lineAt(position.line);
       const fullLineText = line.text;
-    
-      // Use a regex to match the entire "lorem-p-<number>" or "lorem-w-<number>"
+      
+      // Check if there's a "lorem-p-<number>" or "lorem-w-<number>" text
       const match = fullLineText.match(/lorem-[pw]-\d+/);
-      if (match) {
-        const commandStartIndex = match.index || 0; // Start index of the matched command
-        const commandEndIndex = commandStartIndex + match[0].length; // End index of the matched command
-        const range = new vscode.Range(
-          new vscode.Position(position.line, commandStartIndex),
-          new vscode.Position(position.line, commandEndIndex)
-        );
-    
-        const loremIpsum = generateLoremIpsum(type, amount);
-    
-        // Replace the command text with the generated Lorem Ipsum
-        editor.edit(editBuilder => {
-          // First, ensure the entire command is removed
-          editBuilder.replace(range, '');
-    
-          // Then, insert the generated Lorem Ipsum text at the correct position
-          editBuilder.insert(new vscode.Position(position.line, commandStartIndex), loremIpsum);
-        });
-      }
-    }
-  }
   
-
-  function insertTextAtCursor(text: string) {
-    const editor = vscode.window.activeTextEditor;
-    if (editor) {
-      const position = editor.selection.active;
-      editor.edit((editBuilder) => {
-        editBuilder.insert(position, text);
+      const loremIpsum = generateLoremIpsum(type, amount); // Generate the Lorem Ipsum text
+  
+      editor.edit(editBuilder => {
+        if (match) {
+          const commandStartIndex = match.index || 0; // Start index of the matched command
+          const commandEndIndex = commandStartIndex + match[0].length; // End index of the matched command
+          const range = new vscode.Range(
+            new vscode.Position(position.line, commandStartIndex),
+            new vscode.Position(position.line, commandEndIndex)
+          );
+  
+          // Replace the command text with the generated Lorem Ipsum
+          editBuilder.replace(range, loremIpsum);
+        } else {
+          // If there's no matching command text, just insert the generated text at the cursor position
+          editBuilder.insert(position, loremIpsum);
+        }
       });
     }
   }
+
 
   vscode.commands.registerCommand("autofold.loremIpsumParagraph1", () => {
     insertLoremIpsum("paragraphs", 1);
@@ -503,13 +538,7 @@ export function activate(context: vscode.ExtensionContext) {
           const item = new vscode.CompletionItem(`lorem-p-${i}`, vscode.CompletionItemKind.Snippet);
           item.detail = `Generate ${i} paragraph(s) of Lorem Ipsum`;
   
-          // Range to replace the "lorem-p-<number>" text
-          const range = document.getWordRangeAtPosition(position, /lorem-p-\d+/);
-          if (range) {
-            item.range = range;
-          }
-  
-          // Use the command to insert the generated text
+          // Set the command to insert the generated text when the suggestion is selected
           item.command = { command: `autofold.loremIpsumParagraph${i}`, title: `Insert ${i} Paragraphs` };
   
           completionItems.push(item);
@@ -521,13 +550,7 @@ export function activate(context: vscode.ExtensionContext) {
           const item = new vscode.CompletionItem(`lorem-w-${index + 1}`, vscode.CompletionItemKind.Snippet);
           item.detail = `Generate ${count} words of Lorem Ipsum`;
   
-          // Range to replace the "lorem-w-<number>" text
-          const range = document.getWordRangeAtPosition(position, /lorem-w-\d+/);
-          if (range) {
-            item.range = range;
-          }
-  
-          // Use the command to insert the generated text
+          // Set the command to insert the generated text when the suggestion is selected
           item.command = { command: `autofold.loremIpsumWord${count}`, title: `Insert ${count} Words` };
   
           completionItems.push(item);
@@ -538,6 +561,8 @@ export function activate(context: vscode.ExtensionContext) {
     },
     '-', 'p', 'w' // Trigger the completion when "lorem-p-" or "lorem-w-" is typed
   );
+
+
   context.subscriptions.push(
     vscode.commands.registerCommand(
       "autofold.handleCommand",
