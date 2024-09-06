@@ -5,26 +5,29 @@ const createCommandTreeItem = (
   label: string,
   description: string,
   commandId: string,
-  iconName: string,
-  collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None,
-  isKeybindingItem: boolean = false
+  iconName: string | undefined,
+  collapsibleState: vscode.TreeItemCollapsibleState = vscode.TreeItemCollapsibleState.None
 ): vscode.TreeItem => {
-  const iconPath = vscode.Uri.file(
-    path.join(__filename, "..", "..", "resources", "light", iconName)
-  );
   const item = new vscode.TreeItem(label, collapsibleState);
   item.description = description;
-  item.iconPath = iconPath;
+  
+  // Only set the iconPath if an icon is provided
+  if (iconName) {
+    const iconPath = vscode.Uri.file(path.join(__filename, '..', '..', 'resources', 'light', iconName));
+    item.iconPath = iconPath;
+  }
+
+  // Set the command if provided
   if (commandId) {
     item.command = {
-      command: commandId, // Make sure this matches the command registered in `activate`
+      command: "autofold.handleCommand",
       title: label,
-      arguments: [commandId, isKeybindingItem], // Passing arguments if needed
+      arguments: [commandId]
     };
   }
+  
   return item;
 };
-
 // Data Provider
 const createTreeDataProvider = () => {
   const onDidChangeTreeData = new vscode.EventEmitter<void>();
@@ -64,28 +67,28 @@ const getRootItems = () => [
     "Fold Functionality",
     "",
     "",
-    "",
+    undefined,
     vscode.TreeItemCollapsibleState.Expanded
   ),
   createCommandTreeItem(
     "Lorem Ipsum Generator Paragraf",
     "",
     "",
-    "",
+    undefined,
     vscode.TreeItemCollapsibleState.Expanded
   ),
   createCommandTreeItem(
     "Lorem Ipsum Generator Word",
     "",
     "",
-    "",
+    undefined,
     vscode.TreeItemCollapsibleState.Expanded
   ),
   createCommandTreeItem(
     "Bonus",
     "",
     "",
-    "",
+    undefined,
     vscode.TreeItemCollapsibleState.Expanded
   ),
 ];
