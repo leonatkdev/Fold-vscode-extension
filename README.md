@@ -7,20 +7,26 @@
 A Visual Studio Code extension to efficiently manage folding and more.
 
 ## Features
-
-- **Fold Functions**: Fold all function blocks in the current file.
 - **Fold File**: Fold all sections in the current file.
-- **Fold Everything**: Fold all foldable regions and folders.
-- **Unfold Everything**: Unfold all regions and folders.
+- **Fold Folders**: Fold folders.
+- **Unfold File**: Unfold all regions in the current file.
+- **Fold Functions**: Fold all function blocks in the current file.
 - **Fold All Except Selected**: Fold all sections except the currently selected one.
 - **Unfold All Except Selected**: Unfold all sections except the currently selected one.
 - **Fold Level 1-5**: Fold to specified levels, typically used for different levels of code nesting.
+- **Show Commands**: Access a menu of all folding commands.
+
+### Main Image
+![Main Extension Image](resources/readme/mainImage.png "Main Extension Image")
 
 ### Side Panel Functions
 ![Side Panel Functions](resources/readme/PanelFunctions.png "Side Panel Functions")
 
 ### Right Click Functions
 ![Right Click Functions](resources/readme/RightClickFunctions.png "Right Click Functions")
+
+### Quick Show All Commands Functions (CTRL+K + H)
+![Quick Show All Commands](resources/readme/AllCommands.png "Quick Show All Commands")
 
 
 ## Installation
@@ -40,14 +46,15 @@ code --install-extension LeonatKrasniqi.foldvscode
 
 | Command                    | Keybinding          |
 |----------------------------|---------------------|
-| Fold Functions             | `Ctrl+Alt+F`        |
-| Fold File                  | `Ctrl+Alt+Shift+F`  |
-| Fold Everything            | `Ctrl+Alt+A`        |
-| Unfold Everything          | `Ctrl+Alt+Shift+A`  |
-| Fold All Except Selected   | `Ctrl+Alt+E`        |
-| Unfold All Except Selected | `Ctrl+Alt+Shift+E`  |
-| Fold Level 1               | `Ctrl+Alt+1`        |
-| Fold Level 2               | `Ctrl+Alt+2`        |
-| Fold Level 3               | `Ctrl+Alt+3`        |
-| Fold Level 4               | `Ctrl+Alt+4`        |
-| Fold Level 5               | `Ctrl+Alt+5`        |
+| Fold File                  | `Ctrl+K J`          |
+| Fold Folders               | `Ctrl+K C`          |
+| Unfold File                | `Ctrl+K U`          |
+| Fold Functions             | `Ctrl+K B`          |
+| Fold All Except Selected   | `Ctrl+K + Ctrl+F`   |
+| Unfold All Except Selected | `Ctrl+K + Ctrl+U`   |
+| Fold Level 1               | `Ctrl+K 1`          |
+| Fold Level 2               | `Ctrl+K 2`          |
+| Fold Level 3               | `Ctrl+K 3`          |
+| Fold Level 4               | `Ctrl+K 4`          |
+| Fold Level 5               | `Ctrl+K 5`          |
+| Show Commands              | `Ctrl+K Ctrl+H`     |
