@@ -1,4 +1,4 @@
-# AutoFold
+# FoldVSC
 
 [![Version](https://img.shields.io/visual-studio-marketplace/v/LeonatKrasniqi.foldvscode)](https://marketplace.visualstudio.com/items?itemName=LeonatKrasniqi.foldvscode)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/LeonatKrasniqi.foldvscode)](https://marketplace.visualstudio.com/items?itemName=LeonatKrasniqi.foldvscode)
