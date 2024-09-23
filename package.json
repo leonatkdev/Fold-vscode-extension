@@ -1,8 +1,8 @@
 {
   "name": "foldvscode",
   "displayName": "Fold VSCode",
-  "description": "Fold function and folders",
-  "version": "0.1.0",
+  "description": "Fold files, folders, functions, and by levels",
+  "version": "0.1.1",
   "repository": "https://github.com/leonatkdev/extension-vscode-",
   "publisher": "LeonatKrasniqi",
   "license": "MIT",
