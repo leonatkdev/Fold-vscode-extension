@@ -13,8 +13,16 @@ const createCommandTreeItem = (
   
   // Only set the iconPath if an icon is provided
   if (iconName) {
-    const iconPath = vscode.Uri.file(path.join(__filename, '..', '..', 'resources', 'light', iconName));
-    item.iconPath = iconPath;
+    const lightIconPath = vscode.Uri.file(
+      path.join(__filename, '..', '..', 'resources', 'light', iconName)
+    );
+    const darkIconPath = vscode.Uri.file(
+      path.join(__filename, '..', '..', 'resources', 'dark', iconName)
+    );
+    item.iconPath = {
+      light: lightIconPath,
+      dark: darkIconPath,
+    };
   }
 
   // Set the command if provided
@@ -72,7 +80,7 @@ const getCommandDescriptionItems = () => [
     "Fold File",
     "Fold all sections in the current file ( CTRL+K + J )",
     "FoldVSC.foldFile",
-    "file.svg"
+    "foldfile.svg"
   ),
   createCommandTreeItem(
     "Fold Folders",

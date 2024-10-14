@@ -56,8 +56,8 @@
         "command": "FoldVSC.foldFile",
         "title": "Fold File",
         "icon": {
-          "light": "resources/light/file.svg",
-          "dark": "resources/light/file.svg"
+          "light": "resources/light/foldfile.svg",
+          "dark": "resources/dark/foldfile.svg"
         }
       },
       {
@@ -65,7 +65,7 @@
         "title": "Fold Folders",
         "icon": {
           "light": "resources/light/folder.svg",
-          "dark": "resources/light/folder.svg"
+          "dark": "resources/dark/folder.svg"
         }
       },
       {
@@ -73,7 +73,7 @@
         "title": "Unfold File",
         "icon": {
           "light": "resources/light/unfold.svg",
-          "dark": "resources/light/unfold.svg"
+          "dark": "resources/dark/unfold.svg"
         }
       },
       {

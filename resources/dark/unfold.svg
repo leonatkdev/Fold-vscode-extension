@@ -1,7 +1,7 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
 <!-- Uploaded to: SVG Repo, www.svgrepo.com, Transformed by: SVG Repo Mixer Tools -->
-<svg xmlns="http://www.w3.org/2000/svg" fill="#333333" width="64px" height="64px" viewBox="0 0 32 32" id="icon" stroke="#333333">
+<svg fill="#D3D3D3" width="64px" height="64px" viewBox="0 0 32 32" id="icon" xmlns="http://www.w3.org/2000/svg" stroke="#D3D3D3">
 
 <g id="SVGRepo_bgCarrier" stroke-width="0"/>
 
@@ -26,8 +26,6 @@
 <rect x="15" y="4" width="2" height="24"/>
 
 <polygon points="10.586 3.959 7 7.249 3.412 3.958 2 5.373 7 10 12 5.373 10.586 3.959"/>
-
-
 
 </g>
 
