@@ -1,4 +1,4 @@
-# FoldVSC
+# Fold VSCode
 
 [![Version](https://img.shields.io/visual-studio-marketplace/v/LeonatKrasniqi.foldvscode)](https://marketplace.visualstudio.com/items?itemName=LeonatKrasniqi.foldvscode)
 [![Installs](https://img.shields.io/visual-studio-marketplace/i/LeonatKrasniqi.foldvscode)](https://marketplace.visualstudio.com/items?itemName=LeonatKrasniqi.foldvscode)
@@ -19,8 +19,9 @@ A Visual Studio Code extension to efficiently manage folding and more.
 ### Main Image
 ![Main Extension Image](resources/readme/mainImage.png "Main Extension Image")
 
-### Side Panel Functions
-![Side Panel Functions](resources/readme/PanelFunctions.png "Side Panel Functions")
+
+### Editor Toolbar Functions
+![Right Click Functions](resources/readme/EditorToolbarFunctions.png "Editor Toolbar Functions")
 
 ### Right Click Functions
 ![Right Click Functions](resources/readme/RightClickFunctions.png "Right Click Functions")

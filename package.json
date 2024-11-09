@@ -2,7 +2,7 @@
   "name": "foldvscode",
   "displayName": "Fold VSCode",
   "description": "Fold files, folders, functions, and by levels",
-  "version": "0.1.1",
+  "version": "1.0.1",
   "repository": "https://github.com/leonatkdev/extension-vscode-",
   "publisher": "LeonatKrasniqi",
   "license": "MIT",
@@ -202,17 +202,16 @@
         {
           "command": "FoldVSC.foldFile",
           "group": "navigation",
-          "when": "editorLangId == 'javascript'"
+          "when": "resourceExtname != '.png' && resourceExtname != '.jpg' && resourceExtname != '.gif'"
         },
         {
           "command": "FoldVSC.unfoldFile",
           "group": "navigation",
-          "when": "editorLangId == 'javascript'"
+          "when": "resourceExtname != '.png' && resourceExtname != '.jpg' && resourceExtname != '.gif'"
         },
         {
           "command": "FoldVSC.foldFolder",
-          "group": "navigation",
-          "when": "editorLangId == 'javascript'"
+          "group": "navigation"
         }
       ]
     }
